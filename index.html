@@ -1,0 +1,3015 @@
+<title>谜案手册 · 口袋逻辑推理</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root {
+    --bg: #EAE0C6;
+    --card: #F6EFDC;
+    --card2: #EFE6CC;
+    --ink: #2B2416;
+    --ink-soft: #77694C;
+    --ink-faint: #A79A78;
+    --seal: #B23327;
+    --seal-ink: #FFF6EA;
+    --seal-soft: rgba(178, 51, 39, 0.10);
+    --rule: #D3C6A2;
+    --rule-strong: #4A3F2A;
+    --cell-bg: #FBF6E8;
+    --cell-dead: #E2D7B8;
+    --shadow: 0 2px 10px rgba(58, 46, 22, 0.14);
+    --serif: 'Songti SC', 'STSongti-SC', 'Noto Serif SC', 'Noto Serif CJK SC', 'SimSun', serif;
+    --sans: -apple-system, 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei', system-ui, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161B;
+      --card: #1D2027;
+      --card2: #23262F;
+      --ink: #E9E3D1;
+      --ink-soft: #9A927C;
+      --ink-faint: #6B6553;
+      --seal: #E0584A;
+      --seal-ink: #1A0F0C;
+      --seal-soft: rgba(224, 88, 74, 0.14);
+      --rule: #33384420;
+      --rule: #333844;
+      --rule-strong: #8A8168;
+      --cell-bg: #262A33;
+      --cell-dead: #191C22;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #EAE0C6; --card: #F6EFDC; --card2: #EFE6CC; --ink: #2B2416;
+    --ink-soft: #77694C; --ink-faint: #A79A78; --seal: #B23327; --seal-ink: #FFF6EA;
+    --seal-soft: rgba(178, 51, 39, 0.10); --rule: #D3C6A2; --rule-strong: #4A3F2A;
+    --cell-bg: #FBF6E8; --cell-dead: #E2D7B8; --shadow: 0 2px 10px rgba(58, 46, 22, 0.14);
+  }
+  :root[data-theme="dark"] {
+    --bg: #14161B; --card: #1D2027; --card2: #23262F; --ink: #E9E3D1;
+    --ink-soft: #9A927C; --ink-faint: #6B6553; --seal: #E0584A; --seal-ink: #1A0F0C;
+    --seal-soft: rgba(224, 88, 74, 0.14); --rule: #333844; --rule-strong: #8A8168;
+    --cell-bg: #262A33; --cell-dead: #191C22; --shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+    overscroll-behavior-y: contain;
+  }
+  button { font-family: inherit; color: inherit; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 16px 14px 40px; }
+  .hidden { display: none !important; }
+
+  /* ---------- shared ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    border: 1.5px solid var(--rule-strong); border-radius: 4px;
+    background: var(--card); color: var(--ink);
+    padding: 10px 18px; font-size: 15px; font-weight: 600;
+    cursor: pointer; user-select: none; -webkit-user-select: none;
+    transition: transform 0.06s ease, background 0.15s ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn.primary { background: var(--seal); border-color: var(--seal); color: var(--seal-ink); }
+  .btn.small { padding: 5px 10px; font-size: 12.5px; font-weight: 500; border-color: var(--rule); color: var(--ink-soft); }
+  .btn:disabled { opacity: 0.4; pointer-events: none; }
+  .btn:focus-visible, .cell:focus-visible, .chip:focus-visible { outline: 2px solid var(--seal); outline-offset: 2px; }
+
+  .sec { border: 1.5px solid var(--rule-strong); background: var(--card); border-radius: 4px; margin-top: 26px; padding: 14px 12px 12px; box-shadow: var(--shadow); }
+  .sec-tab {
+    display: inline-block; position: relative; top: -26px; margin-bottom: -22px; margin-left: 2px;
+    background: var(--card); border: 1.5px solid var(--rule-strong); border-radius: 3px 3px 0 0;
+    padding: 1px 12px 0; font-size: 11.5px; font-weight: 700; letter-spacing: 4px; color: var(--ink-soft);
+  }
+  .sec-head-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: -18px; position: relative; top: -26px; }
+  .sec-head-row .sec-tab { top: 0; margin-bottom: 0; }
+  .sec-tools { display: flex; gap: 6px; }
+
+  /* ---------- home ---------- */
+  .cover {
+    border: 2px solid var(--rule-strong); border-radius: 5px; background: var(--card);
+    box-shadow: var(--shadow); padding: 30px 20px 24px; position: relative; overflow: hidden; text-align: center;
+    background-image: radial-gradient(var(--rule) 0.8px, transparent 0.8px);
+    background-size: 14px 14px;
+  }
+  .cover::after {
+    content: '绝密'; position: absolute; top: 16px; right: 12px;
+    font-family: var(--serif); font-weight: 900; font-size: 13px; letter-spacing: 5px; padding: 3px 8px 3px 12px;
+    color: var(--seal); border: 2px solid var(--seal); border-radius: 4px; transform: rotate(8deg); opacity: 0.85;
+  }
+  .cover .eye { font-size: 44px; line-height: 1; margin-bottom: 8px; }
+  .cover h1 {
+    font-family: var(--serif); font-weight: 900; font-size: 42px; letter-spacing: 10px; text-indent: 10px;
+    margin: 4px 0 2px; line-height: 1.2; text-wrap: balance;
+  }
+  .cover .sub { font-size: 12.5px; letter-spacing: 4px; color: var(--ink-soft); margin-bottom: 14px; }
+  .cover .desc { font-size: 13.5px; color: var(--ink-soft); max-width: 34em; margin: 0 auto; text-align: center; }
+
+  .stats { display: flex; gap: 8px; margin-top: 14px; }
+  .stat { flex: 1; border: 1.5px solid var(--rule); border-radius: 4px; background: var(--card); padding: 8px 4px; text-align: center; }
+  .stat b { display: block; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 20px; line-height: 1.3; }
+  .stat span { font-size: 11px; letter-spacing: 2px; color: var(--ink-soft); }
+  .stat .rank-title { font-family: var(--serif); font-weight: 900; font-size: 17px; }
+
+  .diffs { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .diff {
+    display: flex; align-items: center; gap: 12px; text-align: left; width: 100%;
+    border: 1.5px solid var(--rule); border-radius: 4px; background: var(--card); padding: 10px 12px; cursor: pointer;
+  }
+  .diff.sel { border-color: var(--seal); background: var(--seal-soft); }
+  .diff .d-badge {
+    font-family: var(--serif); font-weight: 900; font-size: 17px; letter-spacing: 2px;
+    border: 1.5px solid var(--rule-strong); border-radius: 4px; padding: 4px 8px; white-space: nowrap;
+  }
+  .diff.sel .d-badge { border-color: var(--seal); color: var(--seal); }
+  .diff .d-info { flex: 1; }
+  .diff .d-name { font-weight: 700; font-size: 14.5px; }
+  .diff .d-desc { font-size: 12px; color: var(--ink-soft); }
+  .diff .d-check { font-size: 18px; color: var(--seal); opacity: 0; }
+  .diff.sel .d-check { opacity: 1; }
+
+  .home-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .home-actions .btn.primary { padding: 14px; font-size: 17px; letter-spacing: 6px; font-family: var(--serif); font-weight: 900; }
+  .tip { font-size: 12px; color: var(--ink-faint); text-align: center; margin-top: 18px; }
+  .linkish { background: none; border: none; padding: 8px; font-size: 13.5px; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  /* ---------- case header ---------- */
+  .case-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .case-title { font-family: var(--serif); font-weight: 900; font-size: 25px; letter-spacing: 2px; margin: 8px 0 2px; text-wrap: balance; }
+  .case-meta { font-size: 11.5px; letter-spacing: 2px; color: var(--ink-faint); font-family: var(--mono); }
+  .case-intro { font-size: 13.5px; color: var(--ink-soft); margin-top: 6px; }
+  .forensic {
+    margin-top: 12px; border: 1.5px dashed var(--seal); border-radius: 4px; background: var(--seal-soft);
+    padding: 9px 12px; font-size: 13.5px; font-weight: 600;
+  }
+  .forensic .f-label { display: block; font-size: 10.5px; letter-spacing: 3px; color: var(--seal); font-weight: 700; margin-bottom: 2px; }
+
+  /* ---------- dossier cards ---------- */
+  .group-label { font-size: 11px; letter-spacing: 3px; color: var(--ink-soft); font-weight: 700; margin: 12px 0 6px 2px; }
+  .group-label:first-of-type { margin-top: 2px; }
+  .cards { display: flex; flex-direction: column; gap: 6px; }
+  .pcard { display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--rule); border-radius: 4px; background: var(--card2); padding: 8px 10px; }
+  .pcard .p-emoji { font-size: 22px; line-height: 1.35; }
+  .pcard .p-body { flex: 1; min-width: 0; }
+  .pcard .p-name { font-weight: 700; font-size: 14px; }
+  .pcard .p-desc { font-size: 12px; color: var(--ink-soft); }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+  .attr-chip { font-size: 10.5px; border: 1px solid var(--rule); border-radius: 999px; padding: 0 7px; color: var(--ink-soft); background: var(--card); }
+  .attr-chip.scene { border-color: var(--seal); color: var(--seal); font-weight: 700; }
+  .attr-chip.motive { border-style: dashed; border-color: var(--ink-soft); font-weight: 600; }
+  .p-quote {
+    display: block; margin-top: 5px; padding-left: 8px;
+    border-left: 2px solid var(--rule-strong);
+    font-size: 12.5px; line-height: 1.55; color: var(--ink-soft);
+  }
+
+  /* ---------- 成长系统 ---------- */
+  .stats.four .stat b { font-size: 17px; }
+  .stats.four .rank-title { font-size: 13px; }
+  .stat .shield { font-style: normal; font-size: 12px; margin-left: 2px; }
+  .equip-chip {
+    display: inline-block; margin: 2px auto 10px; font-size: 12px; letter-spacing: 2px;
+    color: var(--seal); border: 1px solid var(--seal); border-radius: 999px; padding: 1px 10px;
+  }
+  .row-btns { display: flex; gap: 10px; }
+  .row-btns .btn { flex: 1; }
+  .grade-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; margin-left: 4px; flex: none;
+    border: 2px solid var(--ink-soft); border-radius: 4px; transform: rotate(-6deg);
+    font-family: var(--serif); font-weight: 900; font-size: 15px; color: var(--ink-soft);
+  }
+  .grade-badge.g-S, .grade-badge.g-A { border-color: var(--seal); color: var(--seal); }
+  .grade-badge.g-C, .grade-badge.g-D { border-color: var(--ink-faint); color: var(--ink-faint); }
+  .score-rows { border: 1px solid var(--rule); border-radius: 4px; background: var(--card2); padding: 8px 12px; margin-top: 10px; }
+  .score-rows .row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13.5px; padding: 2px 0; opacity: 0; animation: rowIn 0.35s ease forwards;
+  }
+  .score-rows .row.total { border-top: 1.5px solid var(--rule-strong); margin-top: 4px; padding-top: 6px; font-weight: 700; font-size: 15px; }
+  @keyframes rowIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .score-rows .row { animation: none; opacity: 1; } }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .mini-chip { padding: 3px 9px; font-size: 12px; }
+  .arch-card { border: 1px solid var(--rule); border-radius: 4px; background: var(--card2); padding: 9px 11px; }
+  .ac-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .ac-title { font-weight: 700; font-size: 14.5px; }
+  .ac-meta { font-size: 11px; color: var(--ink-faint); margin: 2px 0 4px; }
+  .ac-meta .exon { color: var(--seal); }
+  .ac-line { font-size: 12.5px; color: var(--ink-soft); }
+  .arch-card .reopen { margin-top: 6px; }
+  .title-row { border: 1px solid var(--rule); border-radius: 4px; background: var(--card2); padding: 8px 10px; margin-bottom: 8px; }
+  .title-row.done { border-color: var(--seal); }
+  .t-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+  .t-prog { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+  .t-desc { font-size: 12px; color: var(--ink-soft); margin: 2px 0 6px; }
+  .pbar { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; }
+  .pbar i { display: block; height: 100%; background: var(--seal); }
+  .save-box {
+    width: 100%; height: 64px; resize: none;
+    border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--card2); color: var(--ink);
+    font-family: var(--mono); font-size: 10px; line-height: 1.4;
+    padding: 6px; word-break: break-all;
+  }
+
+  /* ---------- 段位与考核 ---------- */
+  .rank-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 15px; }
+  .exam-btn { width: 100%; margin-top: 10px; font-family: var(--serif); font-weight: 900; letter-spacing: 2px; }
+  .exam-bar {
+    margin-top: 8px; border: 1.5px solid var(--seal); border-radius: 4px; background: var(--seal-soft);
+    padding: 6px 10px; font-size: 12.5px; font-weight: 700; color: var(--seal);
+  }
+  .license-card {
+    border: 2.5px solid var(--seal); border-radius: 6px; background: var(--card2);
+    padding: 14px; text-align: center; margin-top: 10px;
+  }
+  .license-card .lc-title { font-size: 11px; letter-spacing: 5px; color: var(--ink-soft); }
+  .license-card .lc-rank { font-family: var(--serif); font-weight: 900; font-size: 30px; letter-spacing: 8px; color: var(--seal); margin: 4px 0 2px; }
+  .license-card .lc-meta { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); }
+
+  /* ---------- 新手教学 ---------- */
+  .tut-panel {
+    position: fixed; left: 10px; right: 10px; bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 45;
+    max-width: 540px; margin: 0 auto;
+    background: var(--card); border: 2px solid var(--seal); border-radius: 6px;
+    box-shadow: var(--shadow); padding: 10px 56px 10px 12px;
+    font-size: 13.5px; line-height: 1.6;
+  }
+  .tut-panel .tp-tag { display: block; font-size: 10.5px; letter-spacing: 3px; color: var(--seal); font-weight: 700; margin-bottom: 2px; }
+  .tut-panel .btn { margin-top: 8px; padding: 6px 14px; font-size: 13.5px; }
+  body.tut-on .wrap, body.in-case.tut-on .wrap { padding-bottom: 320px; } /* 教学面板悬浮时，给页面留出滚动空间，避免挡住网格底部 */
+  .cell.tut { outline: 3px solid var(--seal); outline-offset: 1px; animation: tutPulse 1.1s ease-in-out infinite; }
+  @keyframes tutPulse { 0%, 100% { outline-color: var(--seal); } 50% { outline-color: transparent; } }
+  @media (prefers-reduced-motion: reduce) { .cell.tut { animation: none; } }
+  .mini-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  @media (min-width: 420px) { .mini-cards { grid-template-columns: 1fr 1fr 1fr; } }
+  .mini { border: 1px solid var(--rule); border-radius: 4px; background: var(--card2); padding: 7px 9px; }
+  .mini .p-name { font-size: 13px; font-weight: 700; }
+  .mini .m-emoji { font-size: 18px; }
+
+  /* ---------- clues ---------- */
+  .clues { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .clue {
+    display: flex; gap: 9px; align-items: flex-start; border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--card2); padding: 8px 10px; cursor: pointer; font-size: 13.5px;
+  }
+  .clue .c-num {
+    font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--seal);
+    border: 1px solid var(--seal); border-radius: 3px; padding: 0 5px; margin-top: 3px; white-space: nowrap;
+  }
+  .clue.struck { opacity: 0.42; }
+  .clue.struck .c-text { text-decoration: line-through; text-decoration-color: var(--seal); }
+  .clue-hint { font-size: 11.5px; color: var(--ink-faint); margin: 8px 2px 0; }
+  .rule-note {
+    font-size: 12px; line-height: 1.6; color: var(--ink-soft);
+    border: 1px dashed var(--rule-strong); border-radius: 4px;
+    background: var(--card2); padding: 8px 10px; margin: 0 0 8px;
+  }
+
+  /* ---------- logic grid ---------- */
+  .grid-scroll { overflow-x: auto; padding-bottom: 4px; }
+  .lgrid { display: grid; gap: 2px; min-width: 100%; width: max-content; margin: 0 auto; }
+  .gh {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;
+    padding: 4px 0 3px; border-radius: 3px; background: var(--card2); border: 1px solid var(--rule);
+    min-height: 80px;
+  }
+  .gh .h-emoji { font-size: 15px; line-height: 1; }
+  .gh .h-name { writing-mode: vertical-rl; font-size: 9.5px; letter-spacing: 1px; color: var(--ink-soft); max-height: 56px; overflow: hidden; white-space: nowrap; }
+  .gl {
+    display: flex; align-items: center; gap: 4px; padding: 0 5px; border-radius: 3px;
+    background: var(--card2); border: 1px solid var(--rule); overflow: hidden;
+  }
+  .gl .l-emoji { font-size: 13px; }
+  .gl .l-name { font-size: 10px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
+  .corner { display: flex; align-items: flex-end; justify-content: flex-start; padding: 3px 4px; font-size: 9px; color: var(--ink-faint); line-height: 1.5; }
+  .cell {
+    border: 1px solid var(--rule); border-radius: 3px; background: var(--cell-bg);
+    aspect-ratio: 1; width: var(--cell); padding: 0; cursor: pointer;
+    font-size: calc(var(--cell) * 0.52); line-height: 1; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.12s ease;
+  }
+  .cell.no { color: var(--ink-faint); }
+  .cell.yes { color: var(--seal); background: var(--seal-soft); border-color: var(--seal); }
+  .cell.hinted { border-style: dashed; border-color: var(--seal); }
+  .cell.flash { animation: cellFlash 0.7s ease; }
+  @keyframes cellFlash { 0% { background: var(--seal); } 100% { background: var(--seal-soft); } }
+  .dead { background: var(--cell-dead); border-radius: 3px; opacity: 0.55; }
+  .gsep-l { margin-left: 5px; }
+  .gsep-t { margin-top: 5px; }
+  .legend { font-size: 11px; color: var(--ink-faint); margin-top: 8px; text-align: center; }
+  .legend b { color: var(--seal); }
+
+  /* ---------- bottom bar ---------- */
+  .dock {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    border-top: 1.5px solid var(--rule-strong);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+  }
+  .dock-inner { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; }
+  .dock .btn { flex: 1; padding: 12px 8px; }
+  .dock .btn.primary { flex: 1.6; font-family: var(--serif); font-weight: 900; letter-spacing: 4px; font-size: 16px; }
+  body.in-case .wrap { padding-bottom: 110px; }
+
+  /* ---------- 音乐开关 ---------- */
+  .music-btn {
+    position: fixed; right: 12px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 50;
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1.5px solid var(--rule-strong);
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font-size: 17px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: var(--shadow); opacity: 0.92;
+  }
+  .music-btn.off { opacity: 0.5; filter: grayscale(1); }
+  body.in-case .music-btn { bottom: calc(98px + env(safe-area-inset-bottom)); }
+
+  /* ---------- modals ---------- */
+  .overlay {
+    position: fixed; inset: 0; z-index: 100; background: rgba(20, 15, 5, 0.55);
+    display: flex; align-items: center; justify-content: center; padding: 18px;
+  }
+  .modal {
+    width: 100%; max-width: 420px; max-height: 84vh; overflow-y: auto;
+    background: var(--card); border: 2px solid var(--rule-strong); border-radius: 6px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35); padding: 20px 18px;
+  }
+  .modal h2 { font-family: var(--serif); font-weight: 900; font-size: 21px; letter-spacing: 3px; margin: 0 0 10px; }
+  .modal .m-actions { display: flex; gap: 10px; margin-top: 18px; }
+  .modal .m-actions .btn { flex: 1; }
+  .pick-label { font-size: 11.5px; letter-spacing: 3px; color: var(--ink-soft); font-weight: 700; margin: 14px 0 6px; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    border: 1.5px solid var(--rule); border-radius: 999px; background: var(--card2);
+    padding: 5px 12px; font-size: 13.5px; cursor: pointer; display: inline-flex; gap: 5px; align-items: center;
+  }
+  .chip.sel { border-color: var(--seal); background: var(--seal-soft); color: var(--seal); font-weight: 700; }
+
+  .stamp-wrap { text-align: center; margin: 6px 0 14px; }
+  .stamp {
+    display: inline-block; font-family: var(--serif); font-weight: 900; font-size: 40px; letter-spacing: 14px; text-indent: 14px;
+    color: var(--seal); border: 4px solid var(--seal); border-radius: 8px; padding: 2px 14px;
+    transform: rotate(-9deg); animation: stampIn 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+  }
+  .stamp.grey { color: var(--ink-faint); border-color: var(--ink-faint); letter-spacing: 6px; text-indent: 6px; font-size: 28px; }
+  @keyframes stampIn { 0% { transform: rotate(-9deg) scale(2.4); opacity: 0; } 65% { transform: rotate(-9deg) scale(0.94); opacity: 1; } 100% { transform: rotate(-9deg) scale(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .stamp { animation: none; }
+    .cell.flash { animation: none; background: var(--seal-soft); }
+  }
+  .truth { border: 1px solid var(--rule); border-radius: 4px; background: var(--card2); padding: 10px 12px; font-size: 14px; margin-top: 10px; }
+  .truth b { color: var(--seal); }
+  .result-stats { font-size: 12.5px; color: var(--ink-soft); margin-top: 10px; text-align: center; }
+  .howto ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+  .howto .marks-demo { display: flex; gap: 14px; justify-content: center; margin: 12px 0 4px; font-size: 13px; }
+  .howto .marks-demo span { display: inline-flex; align-items: center; gap: 6px; }
+  .howto .demo-cell {
+    display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px;
+    border: 1px solid var(--rule); border-radius: 3px; background: var(--cell-bg); font-weight: 700;
+  }
+  .howto .demo-cell.yes { color: var(--seal); background: var(--seal-soft); border-color: var(--seal); }
+  .howto .demo-cell.no { color: var(--ink-faint); }
+
+  /* ---------- English mode ---------- */
+  body.lang-en { --serif: Georgia, 'Times New Roman', 'Songti SC', serif; }
+  body.lang-en .cover h1 { letter-spacing: 5px; text-indent: 5px; font-size: 34px; }
+  body.lang-en .cover .sub { letter-spacing: 1.5px; }
+  body.lang-en .cover::after { content: 'TOP SECRET'; letter-spacing: 2px; }
+  body.lang-en .sec-tab { letter-spacing: 1.5px; }
+  body.lang-en .stat span { letter-spacing: 0.5px; }
+  body.lang-en .stamp { letter-spacing: 2px; text-indent: 2px; font-size: 26px; }
+  body.lang-en .stamp.grey { letter-spacing: 1px; text-indent: 1px; font-size: 19px; }
+  body.lang-en .home-actions .btn.primary { letter-spacing: 2px; font-size: 15px; }
+  body.lang-en .dock .btn.primary { letter-spacing: 1px; font-size: 14px; }
+  body.lang-en .exam-btn { letter-spacing: 0.5px; }
+  body.lang-en .license-card .lc-rank { letter-spacing: 2px; font-size: 24px; }
+  body.lang-en .license-card .lc-title { letter-spacing: 2px; }
+  body.lang-en .pick-label, body.lang-en .group-label { letter-spacing: 1px; }
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+// ============ 谜案引擎 ============
+const ENGINE = (() => {
+
+// ---------- Seeded RNG ----------
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const pick = (rng, arr) => arr[Math.floor(rng() * arr.length)];
+function shuffle(rng, arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ---------- 内容库（中文名为存档主键，en 为显示对照） ----------
+const SUSPECT_POOL = [
+  { name: '沈教授', en: 'Prof. Shen', emoji: '🎓', desc: '大学历史系教授，对庄园的旧事了如指掌', descEn: 'History professor who knows every secret of the old estate' },
+  { name: '白医生', en: 'Dr. Bai', emoji: '🩺', desc: '死者的私人医生，掌握着所有人的秘密', descEn: "The victim's private doctor — keeper of everyone's secrets" },
+  { name: '金老板', en: 'Mr. Jin', emoji: '💼', desc: '古董店老板，最近生意亏了一大笔', descEn: 'Antique dealer whose business just took a heavy loss' },
+  { name: '柳小姐', en: 'Miss Liu', emoji: '🎻', desc: '小提琴演奏家，当晚受邀前来演出', descEn: 'Violinist invited to perform that very evening' },
+  { name: '雷将军', en: 'General Lei', emoji: '🎖️', desc: '退役将军，脾气火爆，嗓门震天', descEn: 'Retired general with a thunderous temper' },
+  { name: '顾夫人', en: 'Madam Gu', emoji: '💍', desc: '死者的远房亲戚，遗嘱上有她的名字', descEn: "A distant relative — her name is in the victim's will" },
+  { name: '秦园丁', en: 'Gardener Qin', emoji: '🌱', desc: '在庄园工作了三十年的老园丁', descEn: 'Old gardener, thirty years on the estate' },
+  { name: '唐大厨', en: 'Chef Tang', emoji: '👨‍🍳', desc: '法餐主厨，据说和死者大吵过一架', descEn: 'Head chef, said to have quarreled with the victim' },
+  { name: '方律师', en: 'Lawyer Fang', emoji: '⚖️', desc: '家族律师，前一天刚修改过遗嘱', descEn: 'Family lawyer who amended the will just yesterday' },
+  { name: '米明星', en: 'Starlet Mi', emoji: '🎬', desc: '过气影星，急需一笔钱东山再起', descEn: 'Faded film star, desperate for a comeback fund' },
+  { name: '郑船长', en: 'Captain Zheng', emoji: '⚓', desc: '远洋船长，刚靠岸就收到了请帖', descEn: 'Sea captain, invited the moment he came ashore' },
+  { name: '韩作家', en: 'Novelist Han', emoji: '✒️', desc: '悬疑小说家，总说要"体验真实案件"', descEn: 'Mystery novelist who wants to "experience a real case"' },
+  { name: '裴督察', en: 'Inspector Pei', emoji: '👮', desc: '退休督察，声称只是"顺路来看看"', descEn: 'Retired inspector who was "just passing by"' },
+  { name: '苏画家', en: 'Painter Su', emoji: '🖌️', desc: '落魄画家，欠着一屁股画材钱', descEn: 'Penniless painter, deep in debt for supplies' },
+  { name: '阮舞者', en: 'Dancer Ruan', emoji: '🩰', desc: '芭蕾舞者，脚步轻得没有一点声音', descEn: 'Ballet dancer whose steps make no sound at all' },
+  { name: '龚管家', en: 'Butler Gong', emoji: '🎩', desc: '老管家，宅子里每把钥匙都挂在他腰间', descEn: 'Old butler — every key in the house hangs at his belt' },
+  { name: '蔡记者', en: 'Reporter Cai', emoji: '📰', desc: '小报记者，为独家新闻什么都干得出来', descEn: 'Tabloid reporter who would do anything for a scoop' },
+  { name: '高教练', en: 'Coach Gao', emoji: '🥊', desc: '拳击教练，一双拳头比什么都硬', descEn: 'Boxing coach with fists harder than anything' },
+  { name: '孟猎人', en: 'Hunter Meng', emoji: '🦌', desc: '山里来的猎人，枪法百发百中', descEn: 'Hunter from the hills — never misses a shot' },
+  { name: '姚掌柜', en: 'Pawnbroker Yao', emoji: '🏷️', desc: '典当行掌柜，死者欠他一件抵押品', descEn: 'Pawnbroker — the victim owed him a pledge' },
+  { name: '岑药师', en: 'Apothecary Cen', emoji: '⚗️', desc: '药剂师，配得出世上最苦的药和最烈的毒', descEn: 'Apothecary who brews the bitterest cures and strongest poisons' },
+  { name: '冯赌客', en: 'Gambler Feng', emoji: '🎲', desc: '赌徒，输光了祖宅，正四处筹钱', descEn: 'Gambler who lost the family home and needs money fast' },
+  { name: '聂魔术师', en: 'Magician Nie', emoji: '🪄', desc: '魔术师，最擅长让东西凭空"消失"', descEn: 'Magician whose specialty is making things "disappear"' },
+  { name: '骆嬷嬷', en: 'Sister Luo', emoji: '📿', desc: '修道院嬷嬷，自称来为死者"祈福"', descEn: 'Convent sister, here to "pray for" the victim' },
+  { name: '温歌手', en: 'Singer Wen', emoji: '🎤', desc: '夜总会歌手，和死者有过一段旧情', descEn: 'Nightclub singer with an old flame for the victim' },
+  { name: '邬蜂农', en: 'Beekeeper Wu', emoji: '🐝', desc: '养蜂人，随身带着一罐"自酿特产"', descEn: 'Beekeeper carrying a jar of "homemade specialty"' },
+  { name: '祝裁缝', en: 'Tailor Zhu', emoji: '🧵', desc: '高级裁缝，量得出在场每个人的尺寸', descEn: "Master tailor who knows everyone's measurements" },
+  { name: '井摄影师', en: 'Photographer Jing', emoji: '📷', desc: '摄影师，暗房里洗出过不少人的秘密', descEn: 'Photographer whose darkroom has developed many secrets' },
+  { name: '佟司机', en: 'Chauffeur Tong', emoji: '🛞', desc: '私人司机，听遍了后座上的所有谈话', descEn: 'Private chauffeur who has heard every backseat conversation' },
+  { name: '尚棋手', en: 'Chessmaster Shang', emoji: '♟️', desc: '国际象棋大师，习惯算准每一步棋', descEn: 'Chess grandmaster who calculates every move' },
+];
+// heavy 沉重 / metal 金属 / sharp 利器
+const WEAPON_POOL = [
+  { name: '毒药', en: 'Poison', emoji: '🧪', heavy: false, metal: false, sharp: false },
+  { name: '古董匕首', en: 'Antique Dagger', emoji: '🗡️', heavy: false, metal: true, sharp: true },
+  { name: '绳索', en: 'Rope', emoji: '🪢', heavy: false, metal: false, sharp: false },
+  { name: '扳手', en: 'Wrench', emoji: '🔧', heavy: true, metal: true, sharp: false },
+  { name: '黄铜烛台', en: 'Brass Candlestick', emoji: '🕯️', heavy: true, metal: true, sharp: false },
+  { name: '青花瓷瓶', en: 'Porcelain Vase', emoji: '🏺', heavy: true, metal: false, sharp: false },
+  { name: '裁纸刀', en: 'Letter Knife', emoji: '✂️', heavy: false, metal: true, sharp: true },
+  { name: '高尔夫球杆', en: 'Golf Club', emoji: '⛳', heavy: true, metal: true, sharp: false },
+  { name: '精装大词典', en: 'Heavy Dictionary', emoji: '📕', heavy: true, metal: false, sharp: false },
+  { name: '冰锥', en: 'Ice Pick', emoji: '🧊', heavy: false, metal: true, sharp: true },
+  { name: '平底锅', en: 'Frying Pan', emoji: '🍳', heavy: true, metal: true, sharp: false },
+  { name: '网球拍', en: 'Tennis Racket', emoji: '🎾', heavy: false, metal: false, sharp: false },
+  { name: '老式猎枪', en: 'Old Shotgun', emoji: '🔫', heavy: true, metal: true, sharp: false },
+  { name: '骑兵军刀', en: 'Cavalry Saber', emoji: '⚔️', heavy: true, metal: true, sharp: true },
+  { name: '猎弓', en: 'Hunting Bow', emoji: '🏹', heavy: false, metal: true, sharp: true },
+  { name: '大理石镇纸', en: 'Marble Paperweight', emoji: '🪨', heavy: true, metal: false, sharp: false },
+  { name: '青铜小雕像', en: 'Bronze Statuette', emoji: '🗿', heavy: true, metal: true, sharp: false },
+  { name: '斧头', en: 'Axe', emoji: '🪓', heavy: true, metal: true, sharp: true },
+  { name: '安眠药瓶', en: 'Sleeping Pills', emoji: '💊', heavy: false, metal: false, sharp: false },
+  { name: '注射器', en: 'Syringe', emoji: '💉', heavy: false, metal: true, sharp: true },
+  { name: '水晶烟灰缸', en: 'Crystal Ashtray', emoji: '💎', heavy: true, metal: false, sharp: false },
+  { name: '铁锤', en: 'Iron Hammer', emoji: '🔨', heavy: true, metal: true, sharp: false },
+  { name: '钢琴弦', en: 'Piano Wire', emoji: '🎹', heavy: false, metal: true, sharp: false },
+  { name: '保龄球', en: 'Bowling Ball', emoji: '🎳', heavy: true, metal: false, sharp: false },
+  { name: '板球棒', en: 'Cricket Bat', emoji: '🏏', heavy: true, metal: false, sharp: false },
+  { name: '剃刀', en: 'Razor', emoji: '🪒', heavy: false, metal: true, sharp: true },
+  { name: '丝绸领带', en: 'Silk Necktie', emoji: '👔', heavy: false, metal: false, sharp: false },
+  { name: '灭火器', en: 'Fire Extinguisher', emoji: '🧯', heavy: true, metal: true, sharp: false },
+  { name: '十字镐', en: 'Pickaxe', emoji: '⛏️', heavy: true, metal: true, sharp: true },
+  { name: '香槟酒瓶', en: 'Champagne Bottle', emoji: '🍾', heavy: true, metal: false, sharp: false },
+];
+const WKEYS = ['heavy', 'metal', 'sharp'];
+const WATTR_LABELS = {
+  zh: { heavy: ['沉重', '轻便'], metal: ['金属', '非金属'], sharp: ['利器', '钝器'] },
+  en: { heavy: ['heavy', 'light'], metal: ['metal', 'non-metal'], sharp: ['sharp', 'blunt'] },
+};
+const LOCATION_POOL = [
+  { name: '图书室', en: 'Library', emoji: '📚', inMain: true },
+  { name: '厨房', en: 'Kitchen', emoji: '🥘', inMain: true },
+  { name: '酒窖', en: 'Wine Cellar', emoji: '🍷', inMain: true },
+  { name: '舞厅', en: 'Ballroom', emoji: '🎶', inMain: true },
+  { name: '阁楼', en: 'Attic', emoji: '🕸️', inMain: true },
+  { name: '画室', en: 'Art Studio', emoji: '🎨', inMain: true },
+  { name: '台球室', en: 'Billiard Room', emoji: '🎱', inMain: true },
+  { name: '音乐室', en: 'Music Room', emoji: '🎼', inMain: true },
+  { name: '书房', en: 'Study', emoji: '🪶', inMain: true },
+  { name: '餐厅', en: 'Dining Room', emoji: '🍽️', inMain: true },
+  { name: '桥牌室', en: 'Card Room', emoji: '🃏', inMain: true },
+  { name: '玫瑰花园', en: 'Rose Garden', emoji: '🌹', inMain: false },
+  { name: '温室', en: 'Greenhouse', emoji: '🪴', inMain: false },
+  { name: '车库', en: 'Garage', emoji: '🚗', inMain: false },
+  { name: '露台', en: 'Terrace', emoji: '⛱️', inMain: false },
+  { name: '马厩', en: 'Stable', emoji: '🐎', inMain: false },
+  { name: '码头', en: 'Dock', emoji: '⛵', inMain: false },
+  { name: '钟楼', en: 'Bell Tower', emoji: '🔔', inMain: false },
+  { name: '狩猎小屋', en: 'Hunting Lodge', emoji: '🛖', inMain: false },
+  { name: '喷泉广场', en: 'Fountain Square', emoji: '⛲', inMain: false },
+  { name: '迷宫花园', en: 'Hedge Maze', emoji: '🌿', inMain: false },
+];
+const VICTIMS = [
+  { zh: '古董收藏家华老爷', en: 'antique collector Old Hua' },
+  { zh: '剧院老板娘温夫人', en: 'theater matron Madame Wen' },
+  { zh: '银行家邵先生', en: 'banker Mr. Shao' },
+  { zh: '珠宝设计师贝小姐', en: 'jewelry designer Miss Bei' },
+  { zh: '船运大亨庞老板', en: 'shipping magnate Boss Pang' },
+  { zh: '神秘慈善家慕先生', en: 'mysterious philanthropist Mr. Mu' },
+  { zh: '茶叶大王齐老爷', en: 'tea tycoon Old Qi' },
+  { zh: '歌剧名伶蓝女士', en: 'opera diva Lady Lan' },
+  { zh: '马场主人纪先生', en: 'stable master Mr. Ji' },
+  { zh: '钟表匠人柏师傅', en: 'clockmaker Master Bo' },
+  { zh: '拍卖行主管洪先生', en: 'auction director Mr. Hong' },
+  { zh: '香料商人塔先生', en: 'spice merchant Mr. Ta' },
+];
+const VENUES = [
+  { zh: '枫影庄园', en: 'Maple Shadow Manor' },
+  { zh: '临海别墅', en: 'the Seaside Villa' },
+  { zh: '雾杉山庄', en: 'Mistfir Lodge' },
+  { zh: '白鹭岛度假屋', en: 'the Egret Island Retreat' },
+  { zh: '月桂大宅', en: 'Laurel House' },
+  { zh: '铁桥河畔庄园', en: 'Ironbridge Estate' },
+  { zh: '黑松崖古堡', en: 'Blackpine Castle' },
+  { zh: '银铃岛庄园', en: 'Silverbell Manor' },
+  { zh: '落霞山庄', en: 'Sunset Lodge' },
+  { zh: '青藤河谷大宅', en: 'Ivyvale House' },
+  { zh: '石南荒原猎庄', en: 'Heathmoor Hunting Estate' },
+  { zh: '曼陀罗别墅', en: 'Datura Villa' },
+];
+const TIMES = [
+  { zh: '一个雷雨交加的深夜', en: 'On a storm-torn midnight' },
+  { zh: '除夕晚宴散场之后', en: "After the New Year's Eve banquet" },
+  { zh: '一个大雾弥漫的清晨', en: 'On a fog-thick morning' },
+  { zh: '生日舞会进行到一半时', en: 'Midway through a birthday ball' },
+  { zh: '秋分晚宴的雨夜', en: 'On the rainy night of the equinox banquet' },
+  { zh: '午夜钟声敲响之际', en: 'As the midnight bell tolled' },
+  { zh: '万圣节化装舞会的高潮', en: 'At the height of the Halloween masquerade' },
+  { zh: '一场突然停电的晚宴中途', en: 'During a sudden blackout at dinner' },
+  { zh: '猎狐归来的黄昏', en: 'At dusk after the fox hunt' },
+  { zh: '新年倒数的前一刻', en: 'Moments before the New Year countdown' },
+];
+const MOTIVES = [
+  '欠下巨债', '觊觎遗产', '旧怨未了', '情感纠葛', '生意反目',
+  '曾被死者羞辱', '守着一个秘密', '被死者敲诈', '嫉妒成性', '争夺藏品',
+];
+const MOTIVE_EN = {
+  '欠下巨债': 'drowning in debt', '觊觎遗产': 'eyeing the inheritance', '旧怨未了': 'an old grudge',
+  '情感纠葛': 'a tangled romance', '生意反目': 'a business betrayal', '曾被死者羞辱': 'humiliated by the victim',
+  '守着一个秘密': 'guarding a secret', '被死者敲诈': 'blackmailed by the victim', '嫉妒成性': 'consumed by jealousy',
+  '争夺藏品': 'fighting over the collection',
+};
+// 动机类别：钱财 / 情仇 / 灭口
+const MOTIVE_CAT = {
+  '欠下巨债': '钱', '觊觎遗产': '钱', '生意反目': '钱', '争夺藏品': '钱',
+  '情感纠葛': '情', '旧怨未了': '情', '曾被死者羞辱': '情', '嫉妒成性': '情',
+  '守着一个秘密': '秘', '被死者敲诈': '秘',
+};
+const MOTIVE_CAT_EN = { '钱': 'Money', '情': 'Passion', '秘': 'Silence' };
+
+// ---------- 嫌疑人特征 ----------
+const ATTRS = {
+  hand: { yes: '左撇子', no: '右撇子', yesEn: 'left-handed', noEn: 'right-handed' },
+  height: { yes: '高个子', no: '矮个子', yesEn: 'tall', noEn: 'short' },
+  glasses: { yes: '戴眼镜', no: '不戴眼镜', yesEn: 'wears glasses', noEn: 'no glasses' },
+  hair: { yes: '银白头发', no: '深色头发', yesEn: 'silver-haired', noEn: 'dark-haired' },
+  smoker: { yes: '烟瘾很大', no: '从不吸烟', yesEn: 'heavy smoker', noEn: 'non-smoker' },
+};
+const ATTR_KEYS = Object.keys(ATTRS);
+const attrLabel = (key, val, lang) => {
+  const a = ATTRS[key];
+  return lang === 'en' ? (val ? a.yesEn : a.noEn) : (val ? a.yes : a.no);
+};
+
+// ---------- 显示辅助 ----------
+const eN = (x, lang) => (lang === 'en' ? (x.en || x.name) : x.name);
+const eDesc = (x, lang) => (lang === 'en' ? (x.descEn || x.desc) : x.desc);
+const wattrLabel = (key, val, lang) => WATTR_LABELS[lang === 'en' ? 'en' : 'zh'][key][val ? 0 : 1];
+const motiveLabel = (m, lang) => (lang === 'en' ? (MOTIVE_EN[m] || m) : m);
+const motiveCatLabel = (m, lang) => (lang === 'en' ? MOTIVE_CAT_EN[MOTIVE_CAT[m]] : MOTIVE_CAT[m]);
+
+// ---------- 线索文案（显示时渲染；vr 决定变体，两种语言同一线索永远同一变体） ----------
+// 原则：证据必须能在逻辑上支撑结论，痕迹归属明确（守则：现场无外人干扰）。
+function clueText(c, cl, lang) {
+  if (cl.text && cl.vr === undefined) return cl.text; // 旧版存档兼容（当年烤死的中文）
+  const vr = cl.vr || 0;
+  const V = (arr) => arr[vr % arr.length];
+  const en = lang === 'en';
+  const S = cl.s != null ? eN(c.suspects[cl.s], lang) : '';
+  const W = cl.w != null ? eN(c.weapons[cl.w], lang) : '';
+  const L = cl.l != null ? eN(c.locations[cl.l], lang) : '';
+  const S1 = cl.s1 != null ? eN(c.suspects[cl.s1], lang) : '';
+  const S2 = cl.s2 != null ? eN(c.suspects[cl.s2], lang) : '';
+  const L1 = cl.l1 != null ? eN(c.locations[cl.l1], lang) : '';
+  const L2 = cl.l2 != null ? eN(c.locations[cl.l2], lang) : '';
+  const W1 = cl.w1 != null ? eN(c.weapons[cl.w1], lang) : '';
+  const W2 = cl.w2 != null ? eN(c.weapons[cl.w2], lang) : '';
+  switch (cl.k) {
+    case 'swNeg': return en ? V([
+      `The investigation confirms ${S} was not carrying the ${W}.`,
+      `Not a single print of ${S}'s was found on the ${W}.`,
+      `A search of ${S}'s belongings turned up no ${W}.`,
+    ]) : V([
+      `调查确认，${S}并没有携带${W}。`,
+      `${W}上采不到${S}的半枚指纹。`,
+      `搜查过${S}的随身物品，没有${W}的影子。`,
+      `可以排除：${S}手里的不是${W}。`,
+    ]);
+    case 'slNeg': return en ? V([
+      `Several witnesses confirm ${S} was not in the ${L}.`,
+      `${S} can't describe a single thing inside the ${L} — they were never there.`,
+      `The ${L} holds no trace of ${S}.`,
+    ]) : V([
+      `多位证人证实，案发时${S}不在${L}。`,
+      `${S}说不出${L}里任何一件陈设的样子——TA没去过那里。`,
+      `${L}里没有留下${S}的任何痕迹。`,
+      `${S}的不在场证明很扎实：案发时TA不在${L}。`,
+    ]);
+    case 'swPos': return en ? V([
+      `More than one witness saw ${S} holding the ${W}.`,
+    ]) : V([
+      `不止一个人看见${S}拿着${W}。`,
+      `${S}大方承认：那晚TA一直带着${W}。`,
+    ]);
+    case 'slPos': return en ? V([
+      `${S} was seen in the ${L} all evening.`,
+    ]) : V([
+      `${S}被目击整晚待在${L}。`,
+      `${S}的证词与仆人们的说法吻合：TA一直在${L}。`,
+    ]);
+    case 'wlPos': return en ? V([
+      `Traces of the ${W} were found in the ${L} — its owner was there that night.`,
+      `Whoever carried the ${W} was in the ${L}.`,
+    ]) : V([
+      `在${L}发现了${W}留下的痕迹——它的主人当时就在那里。`,
+      `带着${W}的那个人，案发时正待在${L}。`,
+      `${W}曾被短暂遗落在${L}，随后又被主人取走。`,
+    ]);
+    case 'wlNeg': return en ? V([
+      `The ${W} was never brought into the ${L}.`,
+      `No trace of the ${W} anywhere in the ${L}.`,
+    ]) : V([
+      `${W}从未被带进过${L}。`,
+      `带着${W}的人，案发时并不在${L}。`,
+      `${L}里查不到${W}的任何踪迹。`,
+    ]);
+    case 'attrW': {
+      const v = cl.val;
+      if (en) {
+        const t = {
+          hand: v ? [`Forensics matched the grip prints on the ${W}: its owner is left-handed.`]
+                  : [`Forensics matched the grip prints on the ${W}: its owner is right-handed.`],
+          height: v ? [`A servant glimpsed a tall figure carrying the ${W} down the corridor.`]
+                    : [`A servant glimpsed a short figure carrying the ${W} down the corridor.`],
+          glasses: v ? [`The maid remembers it clearly: whoever held the ${W} wore glasses.`]
+                     : [`The maid remembers it clearly: whoever held the ${W} wore no glasses.`],
+          hair: v ? [`A silver hair was caught on the ${W} — it belongs to its owner.`]
+                  : [`A dark hair was caught on the ${W} — it belongs to its owner.`],
+          smoker: v ? [`The ${W} reeks of tobacco — its owner is a heavy smoker.`]
+                    : [`The ${W} is spotless, without a whiff of smoke — its owner never smokes.`],
+        };
+        return V(t[cl.key]);
+      }
+      const t = {
+        hand: v ? [`鉴证科比对了${W}上的指纹：按握的方向表明，它的主人惯用左手。`, `${W}的握柄左侧磨得发亮——它的主人常年用左手握它。`]
+                : [`鉴证科比对了${W}上的指纹：按握的方向表明，它的主人惯用右手。`, `${W}的握柄右侧磨得发亮——它的主人常年用右手握它。`],
+        height: v ? [`一名仆人亲眼看见：拿着${W}的是一个高大的身影。`, `目击者记不清那张脸，只记得拿${W}的人个子很高。`]
+                  : [`一名仆人亲眼看见：拿着${W}的是一个矮小的身影。`, `目击者记不清那张脸，只记得拿${W}的人个子不高。`],
+        glasses: v ? [`女仆想起来了：拿着${W}的那个人，鼻梁上架着一副眼镜。`, `拿${W}的人曾停下来擦拭起雾的镜片——TA戴眼镜。`]
+                   : [`女仆想起来了：拿着${W}的那个人，脸上没有戴眼镜。`, `不止一位目击者确认：拿${W}的人不戴眼镜。`],
+        hair: v ? [`${W}的主人是银白头发——TA的一根发丝缠在了上面。`, `鉴证科确认：缠在${W}把手上的发丝来自它的主人，是银白色的。`]
+                : [`${W}的主人是深色头发——TA的一根发丝缠在了上面。`, `鉴证科确认：缠在${W}把手上的发丝来自它的主人，是乌黑色的。`],
+        smoker: v ? [`${W}的主人烟瘾不小——TA留在上面的烟灰和烟草味还没散去。`, `有人看见拿着${W}的人在楼梯间点了根烟。`]
+                  : [`${W}的主人从不吸烟——上面干干净净，连一丝烟味都没有。`, `拿${W}的人一闻到烟味就皱眉躲开——TA不吸烟。`],
+      };
+      return V(t[cl.key]);
+    }
+    case 'attrL': {
+      const v = cl.val;
+      if (en) {
+        const t = {
+          hand: v ? [`The person in the ${L} is left-handed — the half-written note they left slants leftward.`]
+                  : [`The person in the ${L} is right-handed — the half-written note they left slants rightward.`],
+          height: v ? [`The person in the ${L} is tall — their hair brushed the top of the door frame.`]
+                    : [`The person in the ${L} is short — they dragged a footstool over to reach the top shelf.`],
+          glasses: v ? [`The person in the ${L} wears glasses — their lens cloth was found on the carpet.`]
+                     : [`The butler saw the person in the ${L} clearly through the window: no glasses.`],
+          hair: v ? [`The person in the ${L} is silver-haired — a strand was left on the chair back.`]
+                  : [`The person in the ${L} is dark-haired — a strand was left on the chair back.`],
+          smoker: v ? [`The person in the ${L} had just smoked — a still-warm cigarette butt sits in the ashtray.`]
+                    : [`Not a trace of smoke in the ${L} all night — the person there never smokes.`],
+        };
+        return V(t[cl.key]);
+      }
+      const t = {
+        hand: v ? [`${L}里的人惯用左手——TA留下的半页便条，笔迹是左手写的。`, `${L}里的人惯用左手：TA用过的茶杯，杯柄都转向左边。`]
+                : [`${L}里的人惯用右手——TA留下的半页便条，笔迹是右手写的。`, `${L}里的人惯用右手：TA用过的茶杯，杯柄都转向右边。`],
+        height: v ? [`${L}里的人个子很高——TA的头发蹭到了门框上沿。`, `${L}里的人留下的脚印步幅极大——TA是个高个子。`]
+                  : [`${L}里的人个子不高——TA搬了脚凳才够到书架顶层。`, `${L}里的人留下的脚印又小又密——TA是个矮个子。`],
+        glasses: v ? [`${L}里的人戴眼镜——TA的眼镜擦拭布落在了地毯上。`, `${L}里的人戴眼镜：TA的眼镜盒还敞在桌上。`]
+                   : [`${L}的灯坏了一整晚，那里的人却行动自如——TA视力极好，不戴眼镜。`, `管家隔窗看清了${L}里的人：TA脸上没有眼镜。`],
+        hair: v ? [`${L}里的人是银白头发——TA在椅背上留下了一根发丝。`, `${L}里的人是银白头发：沙发靠枕上粘着TA的发丝。`]
+                : [`${L}里的人是深色头发——TA在椅背上留下了一根发丝。`, `${L}里的人是深色头发：沙发靠枕上粘着TA乌黑的发丝。`],
+        smoker: v ? [`${L}里的人刚抽过烟——烟灰缸里留着TA的烟蒂，还温热。`, `${L}里的人烟瘾不小——TA把那里熏得满是烟味。`]
+                  : [`${L}里的人从不吸烟——TA待了一整晚，那里连一点烟味都没有。`, `${L}里的人从不吸烟：TA手边的烟灰缸干干净净，一次没用过。`],
+      };
+      return V(t[cl.key]);
+    }
+    case 'wattrL': {
+      const v = cl.val;
+      if (en) {
+        const t = {
+          heavy: v ? [`The person in the ${L} carried something heavy — it left a drag mark across the floorboards.`]
+                   : [`Witnesses say whoever entered the ${L} was carrying something small and light.`],
+          metal: v ? [`The guard's metal detector rang out at the ${L} — the item there is metal.`]
+                   : [`The metal detector stayed silent at the ${L} — the item there contains no metal.`],
+          sharp: v ? [`The person in the ${L} carried a blade — a clean slit was left in the curtain.`]
+                   : [`Forensics confirm: the item in the ${L} has no edge — it couldn't cut paper.`],
+        };
+        return V(t[cl.wkey]);
+      }
+      const t = {
+        heavy: v ? [`${L}里的人带着一件沉重的物品——TA拖着它在木地板上留下了一道划痕。`, `${L}里的人带的东西分量很重，把地毯压出了深深的印子。`]
+                 : [`目击者说，进${L}的人两手轻松，带的物件小巧轻便。`, `${L}里的人带的东西很轻，能随手提在指尖。`],
+        metal: v ? [`保安的金属探测器对着${L}里那个人的随身物品响个不停——是金属的。`, `${L}里的人带的物品是金属的——放下时磕出了一声脆响。`]
+                 : [`金属探测器扫过${L}里那个人的随身物品，毫无反应——不含金属。`, `${L}里的人带的物件磕在桌上声音闷闷的——不是金属。`],
+        sharp: v ? [`${L}里的人带着利器——门帘上那道整齐的口子，就是TA的物品划开的。`, `${L}里的人带着开刃的物品——桌布上留下了一道干净利落的割痕。`]
+                 : [`鉴证科确认：${L}里的人带的物品边缘圆钝，连纸都划不破。`, `${L}里的人带的是件钝物，没有开刃。`],
+      };
+      return V(t[cl.wkey]);
+    }
+    case 'lattrS': return en ? (cl.inMain
+      ? V([`${S} never left the main house all night.`])
+      : V([`${S} stepped outside the main house — there's fresh mud on their shoes.`])
+    ) : (cl.inMain
+      ? V([`${S}整晚都没有离开过主楼。`, `门房记得很清楚：${S}从未走出主楼一步。`, `${S}的鞋底干干净净——TA一直待在主楼里。`])
+      : V([`${S}案发前后曾离开主楼，去了外面。`, `${S}的鞋底沾着新鲜的泥土——TA当时在主楼外。`, `${S}的外套上沾了夜露，TA肯定出过门。`])
+    );
+    case 'swOr': return en ? V([
+      `The prints on the ${W} are smudged — forensics can only say it belongs to either ${S1} or ${S2}.`,
+      `A maid glimpsed someone carrying the ${W} past the stairs — either ${S1} or ${S2}.`,
+    ]) : V([
+      `${W}上的指纹残缺不全，鉴证科只能确定：它的主人是${S1}或${S2}中的一人。`,
+      `女仆隔着楼梯瞥见有人拿着${W}走过——背影要么是${S1}，要么是${S2}。`,
+    ]);
+    case 'slOr': return en ? V([
+      `The servant delivering supper recalls: ${S} was either in the ${L1} or the ${L2}.`,
+    ]) : V([
+      `送夜宵的仆人到处找${S}，只记得TA要么在${L1}，要么在${L2}。`,
+      `${S}的说法有些含糊：TA声称案发时待在${L1}或${L2}。`,
+    ]);
+    case 'wlOr': return en ? V([
+      `Someone saw the ${W}, but can't recall whether it was in the ${L1} or the ${L2}.`,
+    ]) : V([
+      `有人见过${W}，但记不清是在${L1}还是${L2}。`,
+      `鉴证科把${W}的下落缩小到两处：要么在${L1}，要么在${L2}。`,
+    ]);
+    case 'notMurderer': return en ? V([
+      `After repeated checks, ${S} is cleared of suspicion — they were not at the crime scene.`,
+    ]) : V([
+      `经反复查证，${S}可以排除嫌疑——案发时TA不在案发现场。`,
+      `${S}不是凶手：TA有过硬的证明，案发时不在案发现场。`,
+    ]);
+    case 'murdererAttrS': {
+      const v = cl.val;
+      if (en) return {
+        hand: `The angle of the wounds shows the killer is ${v ? 'left' : 'right'}-handed.`,
+        height: `A guest glimpsed a ${v ? 'tall' : 'short'} figure slipping into the crime scene.`,
+        glasses: `A guest caught the killer's profile entering the scene: ${v ? 'wearing glasses' : 'no glasses'}.`,
+        hair: `A ${v ? 'silver' : 'dark'} hair was clutched in the victim's hand — torn from the killer in the struggle.`,
+        smoker: v ? 'A heavy smell of smoke lingers at the scene — the killer is a heavy smoker.' : 'Not a whiff of smoke at the scene — the killer does not smoke.',
+      }[cl.key];
+      return {
+        hand: `现场行凶痕迹的角度显示：凶手惯用${v ? '左' : '右'}手。`,
+        height: `有宾客在案发前，瞥见一个${v ? '高大' : '矮小'}的身影闪进了案发现场。`,
+        glasses: `有宾客瞥见了进入案发现场那人的侧脸：TA${v ? '戴着眼镜' : '没戴眼镜'}。`,
+        hair: `死者手里攥着一根${v ? '银白' : '乌黑'}的头发——那是挣扎时从凶手头上抓下来的。`,
+        smoker: v ? '案发现场残留着浓重的烟味——凶手烟瘾不小。' : '案发现场没有一丝烟味——凶手不吸烟。',
+      }[cl.key];
+    }
+    case 'murdererAttrW': {
+      const v = cl.val;
+      if (en) return {
+        heavy: v ? 'The wounds are crushing — the coroner judges the weapon was heavy.' : 'No sign of anything heavy — the weapon was something light.',
+        metal: v ? 'Metal particles were found in the wound — the weapon is made of metal.' : 'No metal residue in the wound — the weapon is not metal.',
+        sharp: v ? 'Clean incisions on the body — the weapon has an edge.' : 'Only blunt trauma on the body — the weapon has no edge.',
+      }[cl.wkey];
+      return {
+        heavy: v ? '死者的伤势沉重——法医判断，凶器分量十足。' : '现场没有重物挪动的迹象——凶器是件轻巧的物件。',
+        metal: v ? '法医在死者伤处检出了金属微粒——凶器是金属制品。' : '死者伤处没有金属残留——凶器不是金属制品。',
+        sharp: v ? '死者身上有整齐的切创——凶器开了刃。' : '死者身上没有任何割伤——凶器没有开刃。',
+      }[cl.wkey];
+    }
+    case 'cmpH': return en ? V([
+      `A servant saw the one carrying the ${W1} pass the one carrying the ${W2} — the former stood a full head taller.`,
+    ]) : V([
+      `有仆人看见带${W1}的人和带${W2}的人在走廊擦肩而过——前者比后者高出一个头。`,
+      `带${W1}的人与带${W2}的人曾一同下楼，带${W1}的那位明显高得多。`,
+    ]);
+    case 'xorSide': return en ? V([
+      `The one carrying the ${W1} and the one carrying the ${W2} waved to each other through a window — one inside the main house, one outside.`,
+    ]) : V([
+      `带${W1}的人和带${W2}的人隔着窗户打过招呼——一个在主楼里，一个在主楼外。`,
+      `门房确定：带${W1}的人与带${W2}的人，一个整晚在主楼内，另一个一直在主楼外。`,
+    ]);
+    case 'murdererMotive': return en ? {
+      '钱': "The victim's ledger doesn't add up — the police conclude the killer was after money.",
+      '情': 'Old letters reveal a tangled bond — this was a crime of passion.',
+      '秘': "The victim held someone's secret — the killer struck to keep them silent.",
+    }[cl.cat] : {
+      '钱': '死者的账本上有几笔对不上的账——警方断定：凶手为的是钱财。',
+      '情': '死者的旧信里翻出一段纠葛——警方断定：这是一桩情仇引发的命案。',
+      '秘': '死者生前握着别人的把柄——警方断定：凶手杀人是为了灭口。',
+    }[cl.cat];
+    case 'countS': {
+      const noun = en
+        ? { height: 'tall guest(s)', glasses: 'glasses-wearer(s)', hair: 'silver-haired guest(s)' }[cl.key]
+        : { height: '高个子', glasses: '戴眼镜的', hair: '银白头发的' }[cl.key];
+      if (en) return cl.cnt === 0
+        ? `The doorkeeper watched the main house all night: not one ${noun.replace('(s)', '')} stayed inside.`
+        : `The doorkeeper watched the main house all night: exactly ${cl.cnt} ${noun} stayed inside.`;
+      return cl.cnt === 0
+        ? `门房整晚守在主楼门口，记得很清楚：案发时留在主楼里的人当中，一个${noun}都没有。`
+        : `门房整晚守在主楼门口，数得清清楚楚：案发时留在主楼里的人当中，恰好有${cl.cnt}位${noun}。`;
+    }
+    case 'countW': {
+      if (en) return cl.cnt === 0
+        ? 'The guard swept outside with a metal detector all night — not a single metal item was outside the main house.'
+        : `The guard swept outside with a metal detector all night: exactly ${cl.cnt} metal item(s) were outside the main house.`;
+      return cl.cnt === 0
+        ? '保安带着金属探测器在主楼外巡了一整晚，一声都没响：主楼外没有一件金属物品。'
+        : `保安带着金属探测器在主楼外巡了一整晚：主楼外的物品里，恰好有${cl.cnt}件是金属的。`;
+    }
+  }
+  return '';
+}
+
+// ---------- 证词文案（显示时渲染） ----------
+function testimonyText(c, t, lang) {
+  if (t.text && t.vr === undefined) return t.text; // 旧版兼容
+  const vr = t.vr || 0;
+  const V = (arr) => arr[vr % arr.length];
+  const en = lang === 'en';
+  const L = t.l != null ? eN(c.locations[t.l], lang) : '';
+  const W = t.w != null ? eN(c.weapons[t.w], lang) : '';
+  const S2 = t.s2 != null ? eN(c.suspects[t.s2], lang) : '';
+  switch (t.tt) {
+    case 'claimLoc': return en ? V([
+      `I was in the ${L} all night. Never left.`,
+      `I was in the ${L} when it happened — go and check.`,
+    ]) : V([
+      `我整晚都待在${L}，哪儿也没去。`,
+      `案发时我就在${L}，不信你们去查。`,
+    ]);
+    case 'denyLoc': return en ? V([
+      `I've never set foot in the ${L}.`,
+      `The ${L}? I don't even know which way its door opens.`,
+    ]) : V([
+      `我从没进过${L}。`,
+      `${L}？我连门朝哪边开都不知道。`,
+    ]);
+    case 'denyW': return en ? V([
+      `I never touched the ${W}.`,
+      `The ${W} isn't mine — I never laid a finger on it.`,
+    ]) : V([
+      `我可从来没碰过${W}。`,
+      `${W}不是我的，我提都没碰过它。`,
+    ]);
+    case 'seeOther': return en ? V([
+      `I passed the ${L} and saw ${S2} inside with my own eyes.`,
+      `${S2} was in the ${L} — I saw it plain as day.`,
+    ]) : V([
+      `我路过${L}时，亲眼看见${S2}在里面。`,
+      `${S2}当时就在${L}，我看得真真的。`,
+    ]);
+  }
+  return '';
+}
+
+// ---------- 案件包装文案 ----------
+function caseTitle(c, lang) {
+  if (c.title && c.venueIdx === undefined) return c.title; // 旧版兼容
+  const v = VENUES[c.venueIdx];
+  if (lang === 'en') return c.titleKind ? `Shadows over ${v.en}` : `The ${v.en.replace(/^the /, '')} Mystery`;
+  return `${v.zh}${c.titleKind ? '疑云' : '谜案'}`;
+}
+function caseIntro(c, lang) {
+  if (c.intro && c.introIdx === undefined) return c.intro; // 旧版兼容
+  const t = TIMES[c.timeIdx], v = VICTIMS[c.victimIdx], ve = VENUES[c.venueIdx], n = c.n;
+  if (lang === 'en') return [
+    `${t.en}, ${v.en} was found dead at ${ve.en}. The ${n} suspects were each in a different place, each carrying a suspicious item — and one of them is the killer.`,
+    `The calm of ${ve.en} was shattered ${t.en.charAt(0).toLowerCase() + t.en.slice(1)}: ${v.en} was murdered. Each of the ${n} guests had somewhere to be and something to hide — and one of them is lying.`,
+    `${t.en}, a scream rang through ${ve.en} — ${v.en} never woke again. All ${n} suspects claim innocence, but the places don't add up, the items don't add up. Lies always slip.`,
+  ][c.introIdx % 3];
+  return [
+    `${t.zh}，${v.zh}被发现死在${ve.zh}。案发时，${n}位嫌疑人各自待在不同的地点，每人手里都有一件可疑的物品——真凶就在他们之中。`,
+    `${ve.zh}的宁静在${t.zh}被打破：${v.zh}遇害了。在场的${n}个人各有各的去处、各有各的秘密，而其中一个人在撒谎。`,
+    `${t.zh}，一声尖叫响彻${ve.zh}——${v.zh}再也没有醒来。${n}位嫌疑人都自称无辜，可地点对不上、物品对不上，谎言总会露馅。`,
+  ][c.introIdx % 3];
+}
+function forensicText(c, lang) {
+  if (c.forensic && c.venueIdx === undefined) return c.forensic; // 旧版兼容
+  const loc = c.locations[c.murderLoc];
+  if (lang === 'en') return `The victim was killed in the ${loc.emoji} ${loc.en}. Whoever was there at the time is the murderer.`;
+  return `死者是在【${loc.emoji} ${loc.name}】遇害的。案发时身处此地的人，就是凶手。`;
+}
+
+// ---------- 证词生成（只存参数与变体号） ----------
+// 规则：只有凶手撒谎，其余人句句属实。
+function makeTestimony(rng, s, n, murderer, murderLoc, wOf, lOf) {
+  const isM = s === murderer;
+  const tt = pick(rng, isM ? ['claimLoc', 'denyW', 'seeOther'] : ['claimLoc', 'claimLoc', 'denyLoc', 'denyW', 'seeOther']);
+  const vr = Math.floor(rng() * 4);
+  if (tt === 'claimLoc') {
+    let l;
+    if (isM) {
+      const opts = []; for (let i = 0; i < n; i++) if (i !== murderLoc) opts.push(i);
+      l = pick(rng, opts);
+    } else l = lOf[s];
+    return { s, tt, l, vr };
+  }
+  if (tt === 'denyLoc') {
+    const opts = []; for (let i = 0; i < n; i++) if (i !== lOf[s]) opts.push(i);
+    return { s, tt, l: pick(rng, opts), vr };
+  }
+  if (tt === 'denyW') {
+    let w;
+    if (isM) w = wOf[s];
+    else { const opts = []; for (let i = 0; i < n; i++) if (i !== wOf[s]) opts.push(i); w = pick(rng, opts); }
+    return { s, tt, w, vr };
+  }
+  const cands = [];
+  for (let i = 0; i < n; i++) if (i !== s && (isM || lOf[i] !== murderLoc)) cands.push(i);
+  const s2 = pick(rng, cands);
+  let l;
+  if (isM) {
+    const opts = []; for (let i = 0; i < n; i++) if (i !== lOf[s2]) opts.push(i);
+    l = pick(rng, opts);
+  } else l = lOf[s2];
+  return { s, tt, s2, l, vr };
+}
+
+// ---------- 约束传播求解器 ----------
+function makeGrids(n) {
+  const g = () => Array.from({ length: n }, () => new Array(n).fill(0));
+  return { SW: g(), SL: g(), WL: g() };
+}
+function setMark(M, r, c, val) {
+  if (M[r][c] === val) return 0;
+  if (M[r][c] !== 0) return -1;
+  M[r][c] = val;
+  return 1;
+}
+// 单条线索的推理规则。幂等：每轮传播都会重跑，直到不再产生新标记。
+// 返回新增标记数，矛盾返回 -1。
+function clueInfer(grids, clue, n) {
+  const { SW, SL, WL } = grids;
+  let ch = 0;
+  const mark = (M, r, c, v) => {
+    const rr = setMark(M, r, c, v);
+    if (rr === -1) throw new Error('x');
+    ch += rr;
+  };
+  try {
+    switch (clue.k) {
+      case 'swNeg': mark(SW, clue.s, clue.w, 1); break;
+      case 'swPos': mark(SW, clue.s, clue.w, 2); break;
+      case 'slNeg': mark(SL, clue.s, clue.l, 1); break;
+      case 'slPos': mark(SL, clue.s, clue.l, 2); break;
+      case 'wlPos': mark(WL, clue.w, clue.l, 2); break;
+      case 'wlNeg': mark(WL, clue.w, clue.l, 1); break;
+      case 'attrW':
+        for (let s = 0; s < n; s++) if (clue.attrs[s][clue.key] !== clue.val) mark(SW, s, clue.w, 1);
+        break;
+      case 'attrL':
+        for (let s = 0; s < n; s++) if (clue.attrs[s][clue.key] !== clue.val) mark(SL, s, clue.l, 1);
+        break;
+      case 'wattrL':
+        for (let w = 0; w < n; w++) if (clue.weapons[w][clue.wkey] !== clue.val) mark(WL, w, clue.l, 1);
+        break;
+      case 'lattrS':
+        for (let l = 0; l < n; l++) if (clue.locations[l].inMain !== clue.inMain) mark(SL, clue.s, l, 1);
+        break;
+      // ---- 关联型 ----
+      case 'swOr':
+        for (let s = 0; s < n; s++) if (s !== clue.s1 && s !== clue.s2) mark(SW, s, clue.w, 1);
+        if (SW[clue.s1][clue.w] === 1) mark(SW, clue.s2, clue.w, 2);
+        if (SW[clue.s2][clue.w] === 1) mark(SW, clue.s1, clue.w, 2);
+        break;
+      case 'slOr':
+        for (let l = 0; l < n; l++) if (l !== clue.l1 && l !== clue.l2) mark(SL, clue.s, l, 1);
+        if (SL[clue.s][clue.l1] === 1) mark(SL, clue.s, clue.l2, 2);
+        if (SL[clue.s][clue.l2] === 1) mark(SL, clue.s, clue.l1, 2);
+        break;
+      case 'wlOr':
+        for (let l = 0; l < n; l++) if (l !== clue.l1 && l !== clue.l2) mark(WL, clue.w, l, 1);
+        if (WL[clue.w][clue.l1] === 1) mark(WL, clue.w, clue.l2, 2);
+        if (WL[clue.w][clue.l2] === 1) mark(WL, clue.w, clue.l1, 2);
+        break;
+      case 'notMurderer':
+        mark(SL, clue.s, clue.ml, 1);
+        break;
+      case 'murdererAttrS':
+        for (let s = 0; s < n; s++) if (clue.attrs[s][clue.key] !== clue.val) mark(SL, s, clue.ml, 1);
+        break;
+      case 'murdererAttrW':
+        for (let w = 0; w < n; w++) if (clue.weapons[w][clue.wkey] !== clue.val) mark(WL, w, clue.ml, 1);
+        break;
+      case 'cmpH':
+        for (let s = 0; s < n; s++) {
+          if (!clue.attrs[s].height) mark(SW, s, clue.w1, 1);
+          if (clue.attrs[s].height) mark(SW, s, clue.w2, 1);
+        }
+        break;
+      case 'xorSide': {
+        const side = (l) => clue.locations[l].inMain;
+        for (const [a, b] of [[clue.w1, clue.w2], [clue.w2, clue.w1]]) {
+          const poss = [];
+          for (let l = 0; l < n; l++) if (WL[a][l] !== 1) poss.push(l);
+          if (poss.length && poss.every(l => side(l))) {
+            for (let l = 0; l < n; l++) if (side(l)) mark(WL, b, l, 1);
+          } else if (poss.length && poss.every(l => !side(l))) {
+            for (let l = 0; l < n; l++) if (!side(l)) mark(WL, b, l, 1);
+          }
+        }
+        break;
+      }
+      case 'murdererMotive':
+        for (let s = 0; s < n; s++) if (MOTIVE_CAT[clue.motives[s]] !== clue.cat) mark(SL, s, clue.ml, 1);
+        break;
+      case 'countS': case 'countW': {
+        const isS = clue.k === 'countS';
+        const M = isS ? SL : WL;
+        const rows = [];
+        for (let r = 0; r < n; r++) {
+          const has = isS ? clue.attrs[r][clue.key] === clue.val : clue.weapons[r][clue.wkey] === clue.val;
+          if (has) rows.push(r);
+        }
+        const cols = [], colsOut = [];
+        for (let l = 0; l < n; l++) (clue.locations[l].inMain === clue.side ? cols : colsOut).push(l);
+        let confirmed = 0; const possible = [];
+        for (const r of rows) {
+          let conf = false, poss = false;
+          for (const cc of cols) { if (M[r][cc] === 2) conf = true; if (M[r][cc] !== 1) poss = true; }
+          if (conf) confirmed++;
+          if (poss) possible.push(r);
+        }
+        if (confirmed > clue.cnt || possible.length < clue.cnt) throw new Error('x');
+        if (confirmed === clue.cnt) {
+          for (const r of rows) {
+            let conf = false;
+            for (const cc of cols) if (M[r][cc] === 2) conf = true;
+            if (!conf) for (const cc of cols) mark(M, r, cc, 1);
+          }
+        }
+        if (possible.length === clue.cnt) {
+          for (const r of possible) for (const cc of colsOut) mark(M, r, cc, 1);
+        }
+        break;
+      }
+      case 'testimony': {
+        const s = clue.s, ml = clue.ml;
+        let M, r, cc, pos;
+        switch (clue.tt) {
+          case 'claimLoc': M = SL; r = s; cc = clue.l; pos = true; break;
+          case 'denyLoc': M = SL; r = s; cc = clue.l; pos = false; break;
+          case 'denyW': M = SW; r = s; cc = clue.w; pos = false; break;
+          case 'seeOther': M = SL; r = clue.s2; cc = clue.l; pos = true; break;
+        }
+        const truthMark = pos ? 2 : 1, lieMark = pos ? 1 : 2;
+        if (SL[s][ml] === 1) mark(M, r, cc, truthMark);
+        else if (SL[s][ml] === 2) mark(M, r, cc, lieMark);
+        if (M[r][cc] === lieMark) mark(SL, s, ml, 2);
+        else if (M[r][cc] === truthMark) mark(SL, s, ml, 1);
+        break;
+      }
+    }
+  } catch (e) { return -1; }
+  return ch;
+}
+function propagate(grids, n, clues) {
+  const { SW, SL, WL } = grids;
+  let changed = true;
+  const single = (M) => {
+    let ch = 0;
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        if (M[r][c] === 2) {
+          for (let c2 = 0; c2 < n; c2++) if (c2 !== c) { const rr = setMark(M, r, c2, 1); if (rr === -1) return -1; ch += rr; }
+          for (let r2 = 0; r2 < n; r2++) if (r2 !== r) { const rr = setMark(M, r2, c, 1); if (rr === -1) return -1; ch += rr; }
+        }
+      }
+    }
+    for (let r = 0; r < n; r++) {
+      let unk = -1, cnt = 0, hasYes = false;
+      for (let c = 0; c < n; c++) {
+        if (M[r][c] === 0) { unk = c; cnt++; }
+        if (M[r][c] === 2) hasYes = true;
+      }
+      if (!hasYes && cnt === 0) return -1;
+      if (!hasYes && cnt === 1) { const rr = setMark(M, r, unk, 2); if (rr === -1) return -1; ch += rr; }
+    }
+    for (let c = 0; c < n; c++) {
+      let unk = -1, cnt = 0, hasYes = false;
+      for (let r = 0; r < n; r++) {
+        if (M[r][c] === 0) { unk = r; cnt++; }
+        if (M[r][c] === 2) hasYes = true;
+      }
+      if (!hasYes && cnt === 0) return -1;
+      if (!hasYes && cnt === 1) { const rr = setMark(M, unk, c, 2); if (rr === -1) return -1; ch += rr; }
+    }
+    return ch;
+  };
+  while (changed) {
+    changed = false;
+    for (const M of [SW, SL, WL]) {
+      const r = single(M);
+      if (r === -1) return false;
+      if (r > 0) changed = true;
+    }
+    for (let s = 0; s < n; s++) for (let w = 0; w < n; w++) for (let l = 0; l < n; l++) {
+      const a = SW[s][w], b = SL[s][l], c = WL[w][l];
+      let rr = 0;
+      if (a === 2 && b === 2 && c !== 2) rr = setMark(WL, w, l, 2);
+      else if (a === 2 && c === 2 && b !== 2) rr = setMark(SL, s, l, 2);
+      else if (b === 2 && c === 2 && a !== 2) rr = setMark(SW, s, w, 2);
+      else if (a === 2 && b === 1 && c !== 1) rr = setMark(WL, w, l, 1);
+      else if (a === 2 && c === 1 && b !== 1) rr = setMark(SL, s, l, 1);
+      else if (b === 2 && a === 1 && c !== 1) rr = setMark(WL, w, l, 1);
+      else if (b === 2 && c === 1 && a !== 1) rr = setMark(SW, s, w, 1);
+      else if (c === 2 && a === 1 && b !== 1) rr = setMark(SL, s, l, 1);
+      else if (c === 2 && b === 1 && a !== 1) rr = setMark(SW, s, w, 1);
+      if (rr === -1) return false;
+      if (rr === 1) changed = true;
+    }
+    // 线索推理（含关联型的延迟兑现），与基本规则交替直到不动点
+    for (const c of clues) {
+      const r = clueInfer(grids, c, n);
+      if (r === -1) return false;
+      if (r > 0) changed = true;
+    }
+  }
+  return true;
+}
+function isSolved(grids, n) {
+  for (const M of [grids.SW, grids.SL, grids.WL]) {
+    for (let r = 0; r < n; r++) {
+      if (!M[r].includes(2)) return false;
+    }
+  }
+  return true;
+}
+function solvableByDeduction(clues, n) {
+  const grids = makeGrids(n);
+  if (!propagate(grids, n, clues)) return false;
+  return isSolved(grids, n);
+}
+function progressScore(clues, n) {
+  const grids = makeGrids(n);
+  if (!propagate(grids, n, clues)) return -1;
+  let score = 0;
+  for (const M of [grids.SW, grids.SL, grids.WL])
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (M[r][c] !== 0) score++;
+  return score;
+}
+
+// ---------- 候选线索 ----------
+// tier：0=关联型（优先保留），1=间接特征，2=普通排除/物证，3=直接指认
+function buildCandidates(rng, n, wOf, lOf, suspects, weapons, locations, attrs, motives, murderer, murderLoc, allowDirect) {
+  const wOwner = new Array(n), lOccupant = new Array(n);
+  for (let s = 0; s < n; s++) { wOwner[wOf[s]] = s; lOccupant[lOf[s]] = s; }
+  const cands = [];
+  const base = { attrs, weapons, locations };
+  const ml = murderLoc;
+  const roll = () => Math.floor(rng() * 4);
+  for (let s = 0; s < n; s++) for (let w = 0; w < n; w++) {
+    if (wOf[s] !== w) cands.push({ k: 'swNeg', s, w, vr: roll(), tier: 2 });
+  }
+  for (let s = 0; s < n; s++) for (let l = 0; l < n; l++) {
+    if (lOf[s] !== l) cands.push({ k: 'slNeg', s, l, vr: roll(), tier: 2 });
+  }
+  for (let w = 0; w < n; w++) {
+    const l = lOf[wOwner[w]];
+    cands.push({ k: 'wlPos', w, l, vr: roll(), tier: 2 });
+    for (let l2 = 0; l2 < n; l2++) if (l2 !== l) cands.push({ k: 'wlNeg', w, l: l2, vr: roll(), tier: 1 });
+  }
+  if (allowDirect) {
+    for (let s = 0; s < n; s++) {
+      cands.push({ k: 'swPos', s, w: wOf[s], vr: roll(), tier: 3 });
+      cands.push({ k: 'slPos', s, l: lOf[s], vr: roll(), tier: 3 });
+    }
+  }
+  for (const key of ATTR_KEYS) {
+    const yesCount = attrs.filter(a => a[key]).length;
+    if (yesCount === 0 || yesCount === n) continue;
+    for (let w = 0; w < n; w++) {
+      const val = attrs[wOwner[w]][key];
+      cands.push({ k: 'attrW', w, key, val, ...base, vr: roll(), tier: 1 });
+    }
+    for (let l = 0; l < n; l++) {
+      const val = attrs[lOccupant[l]][key];
+      cands.push({ k: 'attrL', l, key, val, ...base, vr: roll(), tier: 1 });
+    }
+  }
+  for (const wkey of WKEYS) {
+    const yesCount = weapons.filter(w => w[wkey]).length;
+    if (yesCount === 0 || yesCount === n) continue;
+    for (let l = 0; l < n; l++) {
+      const val = weapons[wOf[lOccupant[l]]][wkey];
+      cands.push({ k: 'wattrL', l, wkey, val, ...base, vr: roll(), tier: 1 });
+    }
+  }
+  const inCount = locations.filter(l => l.inMain).length;
+  if (inCount > 0 && inCount < n) {
+    for (let s = 0; s < n; s++) {
+      const inMain = locations[lOf[s]].inMain;
+      cands.push({ k: 'lattrS', s, inMain, ...base, vr: roll(), tier: 1 });
+    }
+  }
+  // ---- 关联型候选 ----
+  for (let w = 0; w < n; w++) {
+    const owner = wOwner[w];
+    const other = (owner + 1 + Math.floor(rng() * (n - 1))) % n;
+    const [s1, s2] = rng() < 0.5 ? [owner, other] : [other, owner];
+    cands.push({ k: 'swOr', w, s1, s2, vr: roll(), tier: 0 });
+  }
+  for (let s = 0; s < n; s++) {
+    const lt = lOf[s];
+    const other = (lt + 1 + Math.floor(rng() * (n - 1))) % n;
+    const [l1, l2] = rng() < 0.5 ? [lt, other] : [other, lt];
+    cands.push({ k: 'slOr', s, l1, l2, vr: roll(), tier: 0 });
+  }
+  for (let w = 0; w < n; w++) {
+    const lt = lOf[wOwner[w]];
+    const other = (lt + 1 + Math.floor(rng() * (n - 1))) % n;
+    const [l1, l2] = rng() < 0.5 ? [lt, other] : [other, lt];
+    cands.push({ k: 'wlOr', w, l1, l2, vr: roll(), tier: 0 });
+  }
+  for (let s = 0; s < n; s++) {
+    if (s !== murderer) cands.push({ k: 'notMurderer', s, ml, vr: roll(), tier: 0 });
+  }
+  for (const key of ATTR_KEYS) {
+    const val = attrs[murderer][key];
+    const matchCount = attrs.filter(a => a[key] === val).length;
+    if (matchCount > 0 && matchCount < n) {
+      cands.push({ k: 'murdererAttrS', key, val, ml, ...base, vr: roll(), tier: 0 });
+    }
+  }
+  for (const wkey of WKEYS) {
+    const val = weapons[wOf[murderer]][wkey];
+    const matchCount = weapons.filter(w => w[wkey] === val).length;
+    if (matchCount > 0 && matchCount < n) {
+      cands.push({ k: 'murdererAttrW', wkey, val, ml, ...base, vr: roll(), tier: 0 });
+    }
+  }
+  const cmpPairs = [];
+  for (let w1 = 0; w1 < n; w1++) for (let w2 = 0; w2 < n; w2++) {
+    if (w1 !== w2 && attrs[wOwner[w1]].height && !attrs[wOwner[w2]].height) cmpPairs.push([w1, w2]);
+  }
+  for (const [w1, w2] of shuffle(rng, cmpPairs).slice(0, n)) {
+    cands.push({ k: 'cmpH', w1, w2, ...base, vr: roll(), tier: 0 });
+  }
+  const xorPairs = [];
+  for (let w1 = 0; w1 < n; w1++) for (let w2 = w1 + 1; w2 < n; w2++) {
+    if (locations[lOf[wOwner[w1]]].inMain !== locations[lOf[wOwner[w2]]].inMain) xorPairs.push([w1, w2]);
+  }
+  for (const [w1, w2] of shuffle(rng, xorPairs).slice(0, n)) {
+    cands.push({ k: 'xorSide', w1, w2, ...base, vr: roll(), tier: 0 });
+  }
+  {
+    const cat = MOTIVE_CAT[motives[murderer]];
+    const matchCount = motives.filter(m => MOTIVE_CAT[m] === cat).length;
+    if (matchCount > 0 && matchCount < n) {
+      cands.push({ k: 'murdererMotive', cat, ml, motives, ...base, vr: roll(), tier: 0 });
+    }
+  }
+  const inCount2 = locations.filter(l => l.inMain).length;
+  if (inCount2 > 0 && inCount2 < n) {
+    for (const key of ['height', 'glasses', 'hair']) {
+      const yesCount = attrs.filter(a => a[key]).length;
+      if (yesCount === 0 || yesCount === n) continue;
+      let cnt = 0;
+      for (let s = 0; s < n; s++) if (attrs[s][key] && locations[lOf[s]].inMain) cnt++;
+      cands.push({ k: 'countS', key, val: true, side: true, cnt, ...base, vr: roll(), tier: 0 });
+    }
+    const metalCount = weapons.filter(w => w.metal).length;
+    if (metalCount > 0 && metalCount < n) {
+      let cnt = 0;
+      for (let s = 0; s < n; s++) if (weapons[wOf[s]].metal && !locations[lOf[s]].inMain) cnt++;
+      cands.push({ k: 'countW', wkey: 'metal', val: true, side: false, cnt, ...base, vr: roll(), tier: 0 });
+    }
+  }
+  return cands;
+}
+
+// 关联型线索类型集合（生成器优先保留这些，删减时先删直白线索）
+const REL_KINDS = new Set(['swOr', 'slOr', 'wlOr', 'notMurderer', 'murdererAttrS', 'murdererAttrW', 'cmpH', 'xorSide', 'murdererMotive', 'countS', 'countW']);
+
+// ---------- 案件生成 ----------
+const DIFFICULTIES = {
+  novice: { id: 'novice', label: '见习', labelEn: 'Novice', n: 3, allowDirect: true, maxDirect: 1, indirectFirst: false, relSeeds: 1, minRel: 1 },
+  expert: { id: 'expert', label: '资深', labelEn: 'Expert', n: 4, allowDirect: true, maxDirect: 1, indirectFirst: true, relSeeds: 2, minRel: 2 },
+  master: { id: 'master', label: '大师', labelEn: 'Master', n: 5, allowDirect: false, maxDirect: 0, indirectFirst: true, relSeeds: 3, minRel: 3 },
+};
+const diffLabel = (id, lang) => {
+  const d = DIFFICULTIES[id];
+  if (!d) return id;
+  return lang === 'en' ? d.labelEn : d.label;
+};
+function pickPool(rng, pool, n, avoidNames) {
+  let filtered = pool;
+  if (avoidNames && avoidNames.length) {
+    const cut = pool.filter(x => !avoidNames.includes(x.name));
+    if (cut.length >= n + 2) filtered = cut;
+  }
+  return shuffle(rng, filtered).slice(0, n);
+}
+// tweak：可选的难度参数覆盖（如新手教学/晋升考核），不影响 diffId 标识
+function generateCase(diffId, seed, avoid, tweak) {
+  const diff = { ...(DIFFICULTIES[diffId] || DIFFICULTIES.novice), ...(tweak || {}) };
+  const n = diff.n;
+  avoid = avoid || { s: [], w: [], l: [] };
+  let attempt = 0;
+  while (attempt < 40) {
+    const rng = mulberry32((seed + attempt * 7919) >>> 0);
+    attempt++;
+    const suspects = pickPool(rng, SUSPECT_POOL, n, avoid.s);
+    const weapons = pickPool(rng, WEAPON_POOL, n, avoid.w);
+    const locations = pickPool(rng, LOCATION_POOL, n, avoid.l);
+    const wOf = shuffle(rng, [...Array(n).keys()]);
+    const lOf = shuffle(rng, [...Array(n).keys()]);
+    const murderLoc = Math.floor(rng() * n);
+    const murderer = lOf.indexOf(murderLoc);
+    const attrs = suspects.map(() => {
+      const a = {};
+      for (const key of ATTR_KEYS) a[key] = rng() < 0.5;
+      return a;
+    });
+    const motives = shuffle(rng, MOTIVES).slice(0, n);
+    // 证词：每人一句，只有凶手撒谎；始终参与推理
+    const testimonies = suspects.map((_, s) => makeTestimony(rng, s, n, murderer, murderLoc, wOf, lOf));
+    const testiClues = testimonies.map(t => ({ ...t, k: 'testimony', ml: murderLoc }));
+    const cands = buildCandidates(rng, n, wOf, lOf, suspects, weapons, locations, attrs, motives, murderer, murderLoc, diff.allowDirect);
+    // 播种：先放入若干关联型线索，让谜题必须交叉推理
+    const relCands = shuffle(rng, cands.filter(c => REL_KINDS.has(c.k)));
+    const chosen = relCands.slice(0, diff.relSeeds);
+    const withT = (arr) => [...testiClues, ...arr];
+    let ordered = shuffle(rng, cands.filter(c => !chosen.includes(c)));
+    if (diff.indirectFirst) ordered.sort((a, b) => a.tier - b.tier || 0);
+    let directUsed = 0;
+    let score = progressScore(withT(chosen), n);
+    if (score < 0) continue;
+    for (const c of ordered) {
+      if (c.tier === 3 && directUsed >= diff.maxDirect) continue;
+      const sc = progressScore(withT([...chosen, c]), n);
+      if (sc > score) {
+        chosen.push(c);
+        if (c.tier === 3) directUsed++;
+        score = sc;
+        if (solvableByDeduction(withT(chosen), n)) break;
+      }
+    }
+    if (!solvableByDeduction(withT(chosen), n)) continue;
+    // 删减冗余：先试删直白线索（tier 高者），关联型最后删
+    for (let pass = 0; pass < 3; pass++) {
+      let removed = false;
+      const order = [...chosen].sort((a, b) => b.tier - a.tier);
+      for (const c of order) {
+        const idx = chosen.indexOf(c);
+        if (idx === -1) continue;
+        const rest = chosen.filter((_, i) => i !== idx);
+        if (solvableByDeduction(withT(rest), n)) { chosen.splice(idx, 1); removed = true; }
+      }
+      if (!removed) break;
+    }
+    if (chosen.filter(c => REL_KINDS.has(c.k)).length < diff.minRel) continue;
+    return {
+      seed, diffId: diff.id, n,
+      suspects, weapons, locations, attrs, motives, testimonies,
+      wOf, lOf, murderer, murderLoc,
+      clues: shuffle(rng, chosen).map(c => ({ k: c.k, s: c.s, w: c.w, l: c.l, key: c.key, val: c.val, wkey: c.wkey, inMain: c.inMain, s1: c.s1, s2: c.s2, l1: c.l1, l2: c.l2, w1: c.w1, w2: c.w2, ml: c.ml, cat: c.cat, cnt: c.cnt, side: c.side, vr: c.vr })),
+      victimIdx: Math.floor(rng() * VICTIMS.length),
+      venueIdx: Math.floor(rng() * VENUES.length),
+      timeIdx: Math.floor(rng() * TIMES.length),
+      introIdx: Math.floor(rng() * 3),
+      titleKind: rng() < 0.5 ? 0 : 1,
+    };
+  }
+  return null;
+}
+function hydrateClues(c) {
+  return c.clues.map(cl => ({ ...cl, attrs: c.attrs, weapons: c.weapons, locations: c.locations, motives: c.motives }));
+}
+// 全部推理素材 = 证词 + 线索（求解校验用）
+function allClues(c) {
+  const t = (c.testimonies || []).map(x => ({ ...x, k: 'testimony', ml: c.murderLoc }));
+  return [...t, ...hydrateClues(c)];
+}
+function solutionGrids(c) {
+  const n = c.n;
+  const grids = makeGrids(n);
+  for (let s = 0; s < n; s++) {
+    for (let w = 0; w < n; w++) grids.SW[s][w] = c.wOf[s] === w ? 2 : 1;
+    for (let l = 0; l < n; l++) grids.SL[s][l] = c.lOf[s] === l ? 2 : 1;
+  }
+  for (let s = 0; s < n; s++) for (let w = 0; w < n; w++) for (let l = 0; l < n; l++) {
+    if (c.wOf[s] === w && c.lOf[s] === l) grids.WL[w][l] = 2;
+  }
+  for (let w = 0; w < n; w++) for (let l = 0; l < n; l++) if (grids.WL[w][l] !== 2) grids.WL[w][l] = 1;
+  return grids;
+}
+
+// ---------- 可解释提示（双语） ----------
+// 返回 { g, r, c, v, why, fix? }；网格已推满时返回 null
+function nextHint(c, marks, lang) {
+  const en = lang === 'en';
+  const n = c.n;
+  const sol = solutionGrids(c);
+  const GK = ['SW', 'SL', 'WL'];
+  for (const g of GK) for (let r = 0; r < n; r++) for (let cc = 0; cc < n; cc++) {
+    const u = marks[g][r][cc];
+    if (u !== 0 && u !== sol[g][r][cc]) {
+      return { fix: true, g, r, c: cc, v: sol[g][r][cc], why: en
+        ? 'This mark contradicts the facts — I have corrected it. Re-check the related clues to see where the reasoning slipped.'
+        : '网格上这个标记与事实矛盾——已帮你改正。回头核对一下相关线索，看看是哪一步推岔了。' };
+    }
+  }
+  const mkGrids = () => ({ SW: marks.SW.map(x => x.slice()), SL: marks.SL.map(x => x.slice()), WL: marks.WL.map(x => x.slice()) });
+  const firstNew = (probe) => {
+    for (const g of GK) for (let r = 0; r < n; r++) for (let cc = 0; cc < n; cc++) {
+      if (marks[g][r][cc] === 0 && probe[g][r][cc] !== 0) return { g, r, c: cc, v: probe[g][r][cc] };
+    }
+    return null;
+  };
+  const sn = (i) => eN(c.suspects[i], lang), wn = (i) => eN(c.weapons[i], lang), ln = (i) => eN(c.locations[i], lang);
+  const rowName = (g, i) => (g === 'WL' ? wn(i) : sn(i));
+  const colName = (g, i) => (g === 'SW' ? wn(i) : ln(i));
+  // ① 线索直接推理
+  const hydrated = hydrateClues(c);
+  for (let i = 0; i < hydrated.length; i++) {
+    const probe = mkGrids();
+    if (clueInfer(probe, hydrated[i], n) > 0) {
+      const m = firstNew(probe);
+      if (m) {
+        const txt = clueText(c, c.clues[i], lang);
+        const nn = String(i + 1).padStart(2, '0');
+        return { ...m, why: en
+          ? `By clue ${nn} — "${txt}" — you can ${m.v === 2 ? 'confirm' : 'rule out'} "${rowName(m.g, m.r)} × ${colName(m.g, m.c)}".`
+          : `依据线索 ${nn}「${txt}」——可以${m.v === 2 ? '确认' : '排除'}「${rowName(m.g, m.r)} × ${colName(m.g, m.c)}」。` };
+      }
+    }
+  }
+  // ② 证词推理
+  const testi = (c.testimonies || []).map(t => ({ ...t, k: 'testimony', ml: c.murderLoc }));
+  for (const t of testi) {
+    const probe = mkGrids();
+    if (clueInfer(probe, t, n) > 0) {
+      const m = firstNew(probe);
+      if (m) {
+        const S = sn(t.s), ml = c.murderLoc;
+        const txt = testimonyText(c, t, lang);
+        let why;
+        if (marks.SL[t.s][ml] === 1) why = en
+          ? `${S} is proven innocent (not at the crime scene) — their testimony "${txt}" must be true. Use it as fact.`
+          : `${S}已被证实不在案发现场，是清白的——TA的证词「${txt}」句句属实，可以直接当事实用。`;
+        else if (marks.SL[t.s][ml] === 2) why = en
+          ? `${S} is confirmed at the crime scene — they are the killer, so their testimony "${txt}" must be a lie. Flip it.`
+          : `${S}已被锁定在案发现场——TA就是凶手，证词「${txt}」必是谎言，把它反过来用。`;
+        else if (m.g === 'SL' && m.r === t.s && m.c === ml && m.v === 2) why = en
+          ? `${S}'s testimony "${txt}" contradicts the proven facts — only the killer lies. They must be at the crime scene!`
+          : `${S}的证词「${txt}」与网格上已证实的事实矛盾——只有凶手才撒谎，TA一定就在案发现场！`;
+        else why = en
+          ? `${S}'s testimony "${txt}" has been verified as true — truth-tellers aren't the killer. Rule them out of the crime scene.`
+          : `${S}的证词「${txt}」已被事实印证为真——说真话的不是凶手，可以排除TA在案发现场。`;
+        return { ...m, why };
+      }
+    }
+  }
+  // ③ 基本规则
+  for (const g of GK) {
+    const M = marks[g];
+    for (let r = 0; r < n; r++) for (let cc = 0; cc < n; cc++) {
+      if (M[r][cc] !== 2) continue;
+      for (let c2 = 0; c2 < n; c2++) if (c2 !== cc && M[r][c2] === 0) {
+        return { g, r, c: c2, v: 1, why: en
+          ? `"${rowName(g, r)}" is already paired with "${colName(g, cc)}" — one each, no repeats, so the rest of this row can be ruled out.`
+          : `「${rowName(g, r)}」已和「${colName(g, cc)}」配对——一人一物一地互不重复，同一行的其余组合都可排除。` };
+      }
+      for (let r2 = 0; r2 < n; r2++) if (r2 !== r && M[r2][cc] === 0) {
+        return { g, r: r2, c: cc, v: 1, why: en
+          ? `"${colName(g, cc)}" already belongs to "${rowName(g, r)}" — the rest of this column can be ruled out.`
+          : `「${colName(g, cc)}」已归属「${rowName(g, r)}」——同一列的其他组合都可排除。` };
+      }
+    }
+    for (let r = 0; r < n; r++) {
+      let unk = -1, cnt = 0, hasYes = false;
+      for (let cc = 0; cc < n; cc++) { if (M[r][cc] === 0) { unk = cc; cnt++; } if (M[r][cc] === 2) hasYes = true; }
+      if (!hasYes && cnt === 1) return { g, r, c: unk, v: 2, why: en
+        ? `Every other option for "${rowName(g, r)}" is ruled out — only "${colName(g, unk)}" remains. It must be true: mark ✓.`
+        : `「${rowName(g, r)}」的其他可能都被排除了——只剩「${colName(g, unk)}」这一格，必然成立，画 ✓。` };
+    }
+    for (let cc = 0; cc < n; cc++) {
+      let unk = -1, cnt = 0, hasYes = false;
+      for (let r = 0; r < n; r++) { if (M[r][cc] === 0) { unk = r; cnt++; } if (M[r][cc] === 2) hasYes = true; }
+      if (!hasYes && cnt === 1) return { g, r: unk, c: cc, v: 2, why: en
+        ? `"${colName(g, cc)}" has only one possibility left — "${rowName(g, unk)}". It must be true: mark ✓.`
+        : `「${colName(g, cc)}」只剩「${rowName(g, unk)}」一个可能——必然成立，画 ✓。` };
+    }
+  }
+  // ④ 交叉推理
+  const { SW, SL, WL } = marks;
+  for (let s = 0; s < n; s++) for (let w = 0; w < n; w++) for (let l = 0; l < n; l++) {
+    const a = SW[s][w], b = SL[s][l], k = WL[w][l];
+    if (a === 2 && b === 2 && k === 0) return { g: 'WL', r: w, c: l, v: 2, why: en
+      ? `Cross-inference: ${sn(s)} carries the ${wn(w)}, and ${sn(s)} is in the ${ln(l)} — so the ${wn(w)} is in the ${ln(l)}.`
+      : `交叉推理：${sn(s)}带着${wn(w)}，而${sn(s)}在${ln(l)}——所以${wn(w)}就在${ln(l)}。` };
+    if (a === 2 && k === 2 && b === 0) return { g: 'SL', r: s, c: l, v: 2, why: en
+      ? `Cross-inference: ${sn(s)} carries the ${wn(w)}, and the ${wn(w)} is in the ${ln(l)} — so ${sn(s)} is in the ${ln(l)}.`
+      : `交叉推理：${sn(s)}带着${wn(w)}，而${wn(w)}在${ln(l)}——所以${sn(s)}就在${ln(l)}。` };
+    if (b === 2 && k === 2 && a === 0) return { g: 'SW', r: s, c: w, v: 2, why: en
+      ? `Cross-inference: ${sn(s)} is in the ${ln(l)}, and the item there is the ${wn(w)} — so ${sn(s)} carries the ${wn(w)}.`
+      : `交叉推理：${sn(s)}在${ln(l)}，而${ln(l)}里的物品是${wn(w)}——所以${sn(s)}带的就是${wn(w)}。` };
+    if (a === 2 && b === 1 && k === 0) return { g: 'WL', r: w, c: l, v: 1, why: en
+      ? `Cross-inference: ${sn(s)} carries the ${wn(w)}, but ${sn(s)} is not in the ${ln(l)} — so the ${wn(w)} cannot be in the ${ln(l)}.`
+      : `交叉推理：${sn(s)}带着${wn(w)}，但${sn(s)}不在${ln(l)}——所以${wn(w)}不会出现在${ln(l)}。` };
+    if (a === 2 && k === 1 && b === 0) return { g: 'SL', r: s, c: l, v: 1, why: en
+      ? `Cross-inference: ${sn(s)} carries the ${wn(w)}, but the ${wn(w)} is not in the ${ln(l)} — so ${sn(s)} is not in the ${ln(l)}.`
+      : `交叉推理：${sn(s)}带着${wn(w)}，但${wn(w)}不在${ln(l)}——所以${sn(s)}也不在${ln(l)}。` };
+    if (b === 2 && a === 1 && k === 0) return { g: 'WL', r: w, c: l, v: 1, why: en
+      ? `Cross-inference: the person in the ${ln(l)} is ${sn(s)}, but ${sn(s)} doesn't carry the ${wn(w)} — so the item in the ${ln(l)} isn't the ${wn(w)}.`
+      : `交叉推理：${ln(l)}里的人是${sn(s)}，但${sn(s)}没带${wn(w)}——所以${ln(l)}里的物品不是${wn(w)}。` };
+    if (b === 2 && k === 1 && a === 0) return { g: 'SW', r: s, c: w, v: 1, why: en
+      ? `Cross-inference: ${sn(s)} is in the ${ln(l)}, but the item there isn't the ${wn(w)} — so ${sn(s)} doesn't carry the ${wn(w)}.`
+      : `交叉推理：${sn(s)}在${ln(l)}，但${ln(l)}里的物品不是${wn(w)}——所以${sn(s)}带的不是${wn(w)}。` };
+    if (k === 2 && a === 1 && b === 0) return { g: 'SL', r: s, c: l, v: 1, why: en
+      ? `Cross-inference: the item in the ${ln(l)} is the ${wn(w)}, but ${sn(s)} doesn't carry it — so ${sn(s)} is not in the ${ln(l)}.`
+      : `交叉推理：${ln(l)}里的物品是${wn(w)}，但${wn(w)}不是${sn(s)}带的——所以${sn(s)}不在${ln(l)}。` };
+    if (k === 2 && b === 1 && a === 0) return { g: 'SW', r: s, c: w, v: 1, why: en
+      ? `Cross-inference: the ${wn(w)} is in the ${ln(l)}, but ${sn(s)} is not — so the ${wn(w)} isn't ${sn(s)}'s.`
+      : `交叉推理：${wn(w)}在${ln(l)}，但${sn(s)}不在${ln(l)}——所以${wn(w)}不是${sn(s)}带的。` };
+  }
+  return null; // 网格已推满
+}
+
+return {
+  generateCase, hydrateClues, allClues, solutionGrids, solvableByDeduction, nextHint,
+  clueText, testimonyText, caseTitle, caseIntro, forensicText,
+  eN, eDesc, attrLabel, wattrLabel, motiveLabel, motiveCatLabel, diffLabel,
+  DIFFICULTIES, ATTRS, ATTR_KEYS, WKEYS, REL_KINDS, MOTIVE_CAT,
+  POOLS: { SUSPECT_POOL, WEAPON_POOL, LOCATION_POOL },
+};
+})();
+
+// ============ 游戏状态与持久化 ============
+const LS_STATS = 'mm_stats_v1';
+const LS_GAME = 'mm_game_v4'; // v4: 双语版，线索改存参数+变体号，旧进行中案件不再兼容
+const LS_PREF = 'mm_pref_v1';
+try { localStorage.removeItem('mm_game_v1'); localStorage.removeItem('mm_game_v3'); } catch (e) {}
+
+// ---------- 段位系统 ----------
+// 双数字：终身声望（totalScore，永不清零）+ 段位进度（rankProgress，晋级后清零）
+// 攒满段位进度 → 晋升考核（下一档难度 + 禁提示 + 仅一次指控，部分限时）→ 通过晋级
+const RANK_LADDER = [
+  { name: '见习侦探', en: 'Apprentice Sleuth', threshold: 500, exam: { n: 4, diffId: 'expert', timeLimit: 0, allRel: false } },
+  { name: '初级侦探', en: 'Junior Detective', threshold: 1000, exam: { n: 4, diffId: 'expert', timeLimit: 600, allRel: false } },
+  { name: '正式探员', en: 'Field Agent', threshold: 2000, exam: { n: 5, diffId: 'master', timeLimit: 0, allRel: false } },
+  { name: '资深侦探', en: 'Senior Detective', threshold: 3500, exam: { n: 5, diffId: 'master', timeLimit: 900, allRel: true } },
+  { name: '首席侦探', en: 'Chief Detective', threshold: 5500, exam: { n: 6, diffId: 'master', timeLimit: 0, allRel: false } },
+  { name: '大师侦探', en: 'Master Detective', threshold: 8000, exam: { n: 6, diffId: 'master', timeLimit: 1200, allRel: true } },
+  { name: '传奇侦探', en: 'Legendary Detective', threshold: 0, exam: null },
+];
+const rankName = (i) => (pref.lang === 'en' ? RANK_LADDER[i].en : RANK_LADDER[i].name);
+// 各段位的主难度：低于主难度的案件段位进度减半（防刷低难度）
+const HOME_DIFF = ['novice', 'expert', 'expert', 'master', 'master', 'master', 'master'];
+const DIFF_ORDER = { novice: 0, expert: 1, master: 2 };
+
+const STAT_DEFAULTS = {
+  solved: 0, perfect: 0, streak: 0, best: 0,
+  totalScore: 0, failed: 0, exonerated: 0,
+  shields: 0, winsToShield: 0,
+  oneShotWins: 0, sCount: 0, masterNoHint: 0, fastWins: 0,
+  titles: [],
+  rank: 0, rankProgress: 0, examCooldown: 0, licenses: [], migratedRank: false,
+};
+const PREF_DEFAULTS = { diff: 'novice', seenHowto: false, title: '', lang: 'zh', langChosen: false };
+// ---------- 双语助手 ----------
+const isEn = () => pref.lang === 'en';
+const LNG = () => (pref.lang === 'en' ? 'en' : 'zh');
+const tt = (zh, en) => (pref.lang === 'en' ? en : zh); // 界面文案内联双语对
+function applyLang() {
+  document.body.classList.toggle('lang-en', isEn());
+  document.title = isEn() ? 'CASEBOOK · Pocket Logic Mysteries' : '谜案手册 · 口袋逻辑推理';
+}
+let stats = { ...STAT_DEFAULTS, titles: [] };
+let pref = { ...PREF_DEFAULTS };
+let G = null; // { case, marks, struck, hintsLeft, attempts, undoStack, startedAt, hinted }
+
+function loadJSON(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
+  } catch (e) { return fallback; }
+}
+function save(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+}
+function saveGame() {
+  if (G) {
+    const { undoStack, ...rest } = G;
+    save(LS_GAME, rest);
+  } else {
+    try { localStorage.removeItem(LS_GAME); } catch (e) {}
+  }
+}
+stats = loadJSON(LS_STATS, stats);
+pref = loadJSON(LS_PREF, pref);
+const savedGame = loadJSON(LS_GAME, null);
+if (savedGame && savedGame.case && savedGame.marks) {
+  G = { ...savedGame, undoStack: [] };
+}
+
+// ---------- 成长系统：计分 / 卷宗库 / 称号 ----------
+const LS_ARCHIVE = 'mm_archive_v1';
+let archive = loadJSON(LS_ARCHIVE, { solved: [], cold: [] });
+if (!Array.isArray(archive.solved)) archive.solved = [];
+if (!Array.isArray(archive.cold)) archive.cold = [];
+function saveArchive() { save(LS_ARCHIVE, archive); }
+
+// 老玩家迁移：把已有声望折算成首段进度（最多够到第一次考核门槛）
+if (!stats.migratedRank) {
+  stats.migratedRank = true;
+  if (!Array.isArray(stats.licenses)) stats.licenses = [];
+  if (stats.totalScore > 0 && stats.rank === 0 && stats.rankProgress === 0) {
+    stats.rankProgress = Math.min(stats.totalScore, RANK_LADDER[0].threshold);
+  }
+  save(LS_STATS, stats);
+}
+
+const BASE_SCORE = { novice: 100, expert: 250, master: 500 };
+const PAR_SECS = { novice: 300, expert: 600, master: 900 }; // 用时基准
+function gradeOf(ratio) { return ratio >= 1.5 ? 'S' : ratio >= 1.2 ? 'A' : ratio >= 0.9 ? 'B' : ratio >= 0.5 ? 'C' : 'D'; }
+
+// 计分：基础分 ×(1-提示扣分) ×(1+用时加成) ×(1+连胜加成) ×(1+首次命中)，地板为基础分 10%
+function computeScore(isReplay) {
+  const c = G.case;
+  const base = BASE_SCORE[c.diffId] || 100;
+  const hintsUsed = 3 - G.hintsLeft;
+  const hintPenalty = Math.min(0.25 * hintsUsed, 0.9);
+  const secs = Math.max(1, Math.round((Date.now() - G.startedAt) / 1000));
+  const par = PAR_SECS[c.diffId] || 300;
+  const timeBonus = secs <= par * 0.5 ? 0.2 : secs <= par ? 0.1 : 0;
+  const streakBonus = isReplay ? 0 : 0.05 * Math.min(stats.streak + 1, 10); // 含本场的新连胜
+  const oneShot = G.attempts === 1 ? 0.3 : 0;
+  let score = base * (1 - hintPenalty) * (1 + timeBonus) * (1 + streakBonus) * (1 + oneShot);
+  score = Math.max(base * 0.1, score);
+  const grade = gradeOf(score / base);
+  return { base, hintsUsed, hintPenalty, secs, timeBonus, streakBonus, oneShot, score: Math.round(score), grade };
+}
+
+// 成就称号：解锁后可装备 1 个
+const TITLES = [
+  { id: 'oneshot10', name: '一击必中', en: 'One-Shot Wonder', desc: '累计 10 次首次指控即命中', descEn: 'Land 10 first-try accusations', target: 10, get: s => s.oneShotWins },
+  { id: 'streak20', name: '不败神话', en: 'The Unbeaten', desc: '达成 20 连胜', descEn: 'Reach a 20-win streak', target: 20, get: s => s.best },
+  { id: 'exon5', name: '沉冤得雪', en: 'Cold Case Closer', desc: '平反 5 个冷案', descEn: 'Exonerate 5 cold cases', target: 5, get: s => s.exonerated },
+  { id: 'solve100', name: '卷宗收藏家', en: 'Dossier Collector', desc: '已破案件达到 100', descEn: 'Close 100 cases', target: 100, get: s => s.solved },
+  { id: 's10', name: '完美主义者', en: 'Perfectionist', desc: '累计获得 10 个 S 评级', descEn: 'Earn 10 S ratings', target: 10, get: s => s.sCount },
+  { id: 'nohint5', name: '零提示的眼睛', en: 'The Unaided Eye', desc: '大师难度连续 5 案不使用提示', descEn: '5 Master cases in a row without hints', target: 5, get: s => s.masterNoHint },
+  { id: 'fast5', name: '雷厉风行', en: 'Swift Justice', desc: '资深或以上难度 5 分钟内破案，累计 5 次', descEn: 'Solve 5 Expert+ cases within 5 minutes each', target: 5, get: s => s.fastWins },
+];
+const titleName = (t) => (pref.lang === 'en' ? t.en : t.name);
+const titleDesc = (t) => (pref.lang === 'en' ? t.descEn : t.desc);
+function titleById(id) { return TITLES.find(t => t.id === id); }
+function checkTitles() {
+  const news = [];
+  for (const t of TITLES) {
+    if (!stats.titles.includes(t.id) && t.get(stats) >= t.target) {
+      stats.titles.push(t.id);
+      news.push(t);
+    }
+  }
+  return news;
+}
+
+// 卷宗记录（COLD 状态额外存整个案件数据，供"重启调查"复现）
+function makeRecord(status, res) {
+  const c = G.case;
+  const la = G.lastAccuse;
+  const LG = LNG();
+  return {
+    id: `${c.seed}-${G.startedAt}`,
+    title: ENGINE.caseTitle(c, LG), diffId: c.diffId, date: Date.now(),
+    culprit: `${c.suspects[c.murderer].emoji} ${ENGINE.eN(c.suspects[c.murderer], LG)}`,
+    weapon: `${c.weapons[c.wOf[c.murderer]].emoji} ${ENGINE.eN(c.weapons[c.wOf[c.murderer]], LG)}`,
+    location: `${c.locations[c.murderLoc].emoji} ${ENGINE.eN(c.locations[c.murderLoc], LG)}`,
+    score: res ? res.score : 0,
+    grade: res ? res.grade : null,
+    hintsUsed: 3 - G.hintsLeft,
+    attempts: G.attempts,
+    timeSec: res ? res.secs : Math.max(1, Math.round((Date.now() - G.startedAt) / 1000)),
+    status,
+    accusation: la ? `${c.suspects[la.s].emoji} ${ENGINE.eN(c.suspects[la.s], LG)}` : null,
+    caseData: status === 'COLD' ? c : undefined,
+  };
+}
+
+// 结案画面的分项明细（逐行弹出动画）
+function scoreRowsHTML(res, finalScore, isReplay) {
+  const rows = [];
+  rows.push([tt('基础分', 'Base score'), String(res.base)]);
+  rows.push([tt('提示扣分', 'Hint penalty'), res.hintsUsed ? `-${Math.round(res.hintPenalty * 100)}%${tt(`（用了 ${res.hintsUsed} 次）`, ` (${res.hintsUsed} used)`)}` : tt('未用提示 ✓', 'no hints ✓')]);
+  rows.push([tt('用时加成', 'Speed bonus'), res.timeBonus ? `+${Math.round(res.timeBonus * 100)}%` : '—']);
+  if (!isReplay) rows.push([tt('连胜加成', 'Streak bonus'), res.streakBonus ? `+${Math.round(res.streakBonus * 100)}%` : '—']);
+  rows.push([tt('首次命中', 'First-try hit'), res.oneShot ? '+30%' : '—']);
+  if (isReplay) rows.push([tt('冷案平反', 'Cold case'), tt('得分 ×50%', 'score ×50%')]);
+  let html = rows.map(([k, v], i) => `<div class="row" style="animation-delay:${(0.15 + i * 0.22).toFixed(2)}s"><span>${k}</span><span>${v}</span></div>`).join('');
+  html += `<div class="row total" style="animation-delay:${(0.15 + rows.length * 0.22).toFixed(2)}s"><span>${tt('最终得分', 'Final score')}</span><span>${finalScore}<span class="grade-badge g-${res.grade}">${res.grade}</span></span></div>`;
+  return `<div class="score-rows">${html}</div>`;
+}
+
+let archTab = 'solved', archFilter = 'all'; // 卷宗库视图状态
+
+// ---------- 存档码备份 ----------
+// 托管环境（沙箱 iframe / iOS 主屏幕容器）可能不长期保留 localStorage，
+// 存档码是跨设备、跨环境的可靠备份手段。
+function exportSave() {
+  let game = null;
+  if (G) { const { undoStack, ...rest } = G; game = rest; }
+  const data = { v: 1, t: Date.now(), stats, pref, archive, game };
+  return 'MMS1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+}
+function importSave(code) {
+  let d;
+  try {
+    const raw = String(code || '').replace(/\s+/g, '');
+    if (!raw.startsWith('MMS1.')) return tt('存档码应以 MMS1. 开头——请确认复制完整。', 'A save code starts with MMS1. — please copy it in full.');
+    d = JSON.parse(decodeURIComponent(escape(atob(raw.slice(5)))));
+  } catch (e) { return tt('存档码解析失败——请确认完整粘贴，中间不能缺字。', 'Could not parse the save code — make sure it was pasted completely.'); }
+  if (!d || !d.stats) return tt('存档码内容无法识别。', 'Unrecognized save code contents.');
+  stats = { ...STAT_DEFAULTS, ...d.stats };
+  if (!Array.isArray(stats.titles)) stats.titles = [];
+  if (!Array.isArray(stats.licenses)) stats.licenses = [];
+  pref = { ...PREF_DEFAULTS, ...d.pref };
+  archive = { solved: [], cold: [], ...(d.archive || {}) };
+  if (!Array.isArray(archive.solved)) archive.solved = [];
+  if (!Array.isArray(archive.cold)) archive.cold = [];
+  G = d.game && d.game.case && d.game.marks ? { ...d.game, undoStack: [] } : null;
+  save(LS_STATS, stats);
+  save(LS_PREF, pref);
+  saveArchive();
+  saveGame();
+  return null;
+}
+function showBackup() {
+  const code = exportSave();
+  openModal(`
+    <h2>${tt('存档备份', 'Save Backup')}</h2>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 6px">${tt('本页面的托管环境在部分设备上（尤其 iPhone 主屏幕模式）<b>不会长期保留</b>浏览器存档。收工前把存档码复制到备忘录，下次进游戏粘贴导入即可续档。', 'On some devices (especially iPhone home-screen mode) the hosting environment <b>does not keep</b> browser saves. Copy your save code to Notes before you leave, and paste it back next time.')}</p>
+    <div class="pick-label">${tt('导出（当前全部进度）', 'EXPORT (full progress)')}</div>
+    <textarea class="save-box" id="expBox" readonly>${code}</textarea>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+      <button class="btn small" id="copyBtn">📋 ${tt('复制存档码', 'Copy save code')}</button>
+      <span id="copyMsg" style="font-size:12px;color:var(--seal)"></span>
+    </div>
+    <div class="pick-label">${tt('导入（覆盖当前进度）', 'IMPORT (overwrites progress)')}</div>
+    <textarea class="save-box" id="impBox" placeholder="${tt('粘贴以 MMS1. 开头的存档码', 'Paste a save code starting with MMS1.')}"></textarea>
+    <div class="m-actions">
+      <button class="btn" id="mClose">${tt('关闭', 'Close')}</button>
+      <button class="btn primary" id="impBtn">${tt('导入', 'Import')}</button>
+    </div>`);
+  document.getElementById('mClose').addEventListener('click', closeModal);
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const box = document.getElementById('expBox');
+    const done = () => { document.getElementById('copyMsg').textContent = tt('已复制 ✓ 快存进备忘录', 'Copied ✓ save it to Notes'); playSfx('select'); };
+    const legacy = () => { box.select(); box.setSelectionRange(0, box.value.length); document.execCommand('copy'); done(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(box.value).then(done).catch(legacy);
+    } else legacy();
+  });
+  document.getElementById('impBtn').addEventListener('click', () => {
+    const codeIn = document.getElementById('impBox').value;
+    if (!codeIn.trim()) return;
+    confirmModal(tt('导入将覆盖当前的战绩、卷宗和进行中的案件，确定吗？', 'Importing will overwrite your stats, archive and current case. Continue?'), () => {
+      const err = importSave(codeIn);
+      if (err) toastModal(tt('导入失败', 'Import Failed'), err);
+      else { renderHome(); toastModal(tt('导入成功', 'Import Complete'), tt('战绩、卷宗、称号与进行中的案件都已恢复。', 'Stats, archive, titles and the case in progress have been restored.')); }
+    });
+  });
+}
+
+// ============ 视图 ============
+const app = document.getElementById('app');
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const DIFF_DESCS = {
+  novice: { zh: '3 名嫌疑人 · 线索直白，几分钟一局', en: '3 suspects · straightforward clues, minutes per case' },
+  expert: { zh: '4 名嫌疑人 · 需要串联多条线索', en: '4 suspects · chain multiple clues together' },
+  master: { zh: '5 名嫌疑人 · 全间接线索，烧脑推理', en: '5 suspects · all indirect clues, brain-burning' },
+};
+
+function rankSectionHTML() {
+  const r = stats.rank;
+  if (r >= RANK_LADDER.length - 1) {
+    return `<div class="sec"><span class="sec-tab">${tt('段位', 'RANK')}</span>
+      <div class="rank-line"><b>👑 ${rankName(r)}</b><span class="t-prog">${tt('已至巅峰', 'At the summit')}</span></div>
+      <div class="pbar"><i style="width:100%"></i></div></div>`;
+  }
+  const th = RANK_LADDER[r].threshold;
+  const pct = Math.min(100, Math.round((stats.rankProgress / th) * 100));
+  const ready = stats.rankProgress >= th;
+  let action;
+  if (!ready) action = `<p class="clue-hint">${tt(`攒满段位进度即可挑战晋升考核（${examDesc(r)}）。低于段位主难度的案件，进度减半。`, `Fill the rank meter to attempt the promotion exam (${examDesc(r)}). Cases below your rank's home difficulty earn half progress.`)}</p>`;
+  else if (stats.examCooldown > 0) action = `<p class="clue-hint">${tt(`上次考核失败——再成功破 <b>${stats.examCooldown}</b> 案即可重新挑战。`, `Last exam failed — solve <b>${stats.examCooldown}</b> more case(s) to retry.`)}</p>`;
+  else action = `<button class="btn primary exam-btn" id="examBtn">⚖️ ${tt('晋升考核', 'Promotion Exam')}: ${rankName(r)} → ${rankName(r + 1)}</button>`;
+  return `<div class="sec"><span class="sec-tab">${tt('段位', 'RANK')}</span>
+    <div class="rank-line"><b>${rankName(r)}</b><span class="t-prog">${stats.rankProgress} / ${th}</span></div>
+    <div class="pbar"><i style="width:${pct}%"></i></div>
+    ${action}</div>`;
+}
+function renderHome() {
+  tutEnd();
+  stopExamTimer();
+  document.body.classList.remove('in-case');
+  applyLang();
+  const resume = G ? `
+    <button class="btn" id="resumeBtn" style="padding:13px">📂 ${tt('继续调查', 'Resume')}《${esc(ENGINE.caseTitle(G.case, LNG()))}》</button>` : '';
+  const eqT = pref.title ? titleById(pref.title) : null;
+  app.innerHTML = `
+    <div class="cover">
+      <div class="eye">🕵️</div>
+      <h1>${tt('谜案手册', 'CASEBOOK')}</h1>
+      <div class="sub">${tt('口袋逻辑推理 · 无限案件', 'Pocket Logic Mysteries · Endless Cases')}</div>
+      ${eqT ? `<div class="equip-chip">〔 ${titleName(eqT)} 〕</div>` : ''}
+      <p class="desc">${tt('每一起案件随机生成：谁是凶手？用了什么凶器？案发时人在哪里？读线索、画网格、层层排除——真相只有一个。', 'Every case is freshly generated: who did it, with what, and where? Read the clues, mark the grid, eliminate the impossible — only one truth remains.')}</p>
+    </div>
+    <div class="stats four">
+      <div class="stat"><b>${stats.solved}</b><span>${tt('已破案件', 'SOLVED')}</span></div>
+      <div class="stat"><b>${stats.totalScore}</b><span>${tt('声望', 'RENOWN')}</span></div>
+      <div class="stat"><b>${stats.streak}${stats.shields ? `<i class="shield">🛡${stats.shields}</i>` : ''}</b><span>${tt('当前连胜', 'STREAK')}</span></div>
+      <div class="stat"><b class="rank-title">${rankName(stats.rank)}</b><span>${tt('段位', 'RANK')}</span></div>
+    </div>
+    ${rankSectionHTML()}
+    <div class="sec">
+      <span class="sec-tab">${tt('选择案卷难度', 'CASE DIFFICULTY')}</span>
+      <div class="diffs">
+        ${Object.values(ENGINE.DIFFICULTIES).map(d => `
+          <button class="diff ${pref.diff === d.id ? 'sel' : ''}" data-diff="${d.id}">
+            <span class="d-badge">${ENGINE.diffLabel(d.id, LNG())}</span>
+            <span class="d-info">
+              <span class="d-name">${d.n}×${d.n} ${tt('推理网格', 'deduction grid')}</span><br>
+              <span class="d-desc">${DIFF_DESCS[d.id][LNG()]}</span>
+            </span>
+            <span class="d-check">✓</span>
+          </button>`).join('')}
+      </div>
+    </div>
+    <div class="home-actions">
+      ${resume}
+      <button class="btn primary" id="newCaseBtn">${tt('翻开新案卷', 'OPEN A NEW CASE')}</button>
+      <div class="row-btns">
+        <button class="btn" id="archiveBtn">📚 ${tt('卷宗库', 'Archive')}</button>
+        <button class="btn" id="titlesBtn">🏅 ${tt('称号墙', 'Titles')}</button>
+      </div>
+      <div style="display:flex;justify-content:center;gap:4px;flex-wrap:wrap">
+        <button class="linkish" id="howtoBtn">${tt('玩法说明', 'How to Play')}</button>
+        <button class="linkish" id="tutBtn">${tt('新手教学', 'Tutorial')}</button>
+        <button class="linkish" id="backupBtn">${tt('存档备份', 'Save Backup')}</button>
+        <button class="linkish" id="langBtn">${tt('English', '中文')}</button>
+      </div>
+    </div>
+    <p class="tip">${tt('💡 在 iPhone 上：Safari 打开本页 → 分享 → 「添加到主屏幕」，即可像 App 一样全屏游玩。<br>⚠️ 部分设备的托管环境不会长期保留进度——收工前用「存档备份」导出存档码存进备忘录，随时可恢复。', '💡 On iPhone: open this page in Safari → Share → "Add to Home Screen" for a full-screen app experience.<br>⚠️ Some hosting environments do not keep browser saves — export a save code via "Save Backup" before you leave, and paste it back anytime.')}</p>
+  `;
+  app.querySelectorAll('.diff').forEach(el => el.addEventListener('click', () => {
+    pref.diff = el.dataset.diff;
+    save(LS_PREF, pref);
+    app.querySelectorAll('.diff').forEach(x => x.classList.toggle('sel', x === el));
+    playSfx('select');
+  }));
+  document.getElementById('newCaseBtn').addEventListener('click', () => {
+    if (G) {
+      confirmModal(tt('翻开新案卷将销毁当前未完成的案件，确定吗？', 'Opening a new case will discard the one in progress. Continue?'), () => { startCase(pref.diff); });
+    } else startCase(pref.diff);
+  });
+  document.getElementById('langBtn').addEventListener('click', () => {
+    pref.lang = isEn() ? 'zh' : 'en';
+    save(LS_PREF, pref);
+    playSfx('select');
+    renderHome();
+  });
+  const rb = document.getElementById('resumeBtn');
+  if (rb) rb.addEventListener('click', () => renderCase());
+  document.getElementById('archiveBtn').addEventListener('click', () => { archTab = 'solved'; renderArchive(); });
+  document.getElementById('titlesBtn').addEventListener('click', showTitles);
+  document.getElementById('howtoBtn').addEventListener('click', () => showHowto(false));
+  document.getElementById('tutBtn').addEventListener('click', tutStart);
+  document.getElementById('backupBtn').addEventListener('click', showBackup);
+  const examBtn = document.getElementById('examBtn');
+  if (examBtn) examBtn.addEventListener('click', showExamIntro);
+  // 首启：先选语言，再进玩法说明
+  if (!pref.langChosen) showLangChoice();
+  else if (!pref.seenHowto) showHowto(true);
+}
+
+// 首启语言选择：选完中文/English 后自动进入玩法说明
+function showLangChoice() {
+  openModal(`
+    <h2 style="text-align:center;letter-spacing:2px">🕵️ 谜案手册<br><span style="font-size:15px;letter-spacing:1px">CASEBOOK</span></h2>
+    <p style="font-size:13px;color:var(--ink-soft);text-align:center;margin:0 0 4px">请选择语言 · Choose your language</p>
+    <div class="m-actions" style="flex-direction:column;gap:8px">
+      <button class="btn primary" id="langZh" style="letter-spacing:3px">中文</button>
+      <button class="btn primary" id="langEn" style="letter-spacing:1px">English</button>
+    </div>`);
+  const choose = (lang) => {
+    pref.lang = lang;
+    pref.langChosen = true;
+    save(LS_PREF, pref);
+    playSfx('select');
+    closeModal();
+    renderHome(); // 重绘后其末尾会在 !seenHowto 时自动弹出玩法说明
+  };
+  document.getElementById('langZh').addEventListener('click', () => choose('zh'));
+  document.getElementById('langEn').addEventListener('click', () => choose('en'));
+}
+
+function startCase(diffId, tweak) {
+  tutEnd();
+  // 避开最近两案出现过的人物/凶器/地点，缓解重复感
+  const recent = pref.recent || { s: [], w: [], l: [] };
+  const c = ENGINE.generateCase(diffId, (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0, recent, tweak);
+  if (!c) { alert('案卷生成失败，请再试一次'); return; }
+  pref.recent = {
+    s: [...c.suspects.map(x => x.name), ...recent.s].slice(0, 10),
+    w: [...c.weapons.map(x => x.name), ...recent.w].slice(0, 10),
+    l: [...c.locations.map(x => x.name), ...recent.l].slice(0, 8),
+  };
+  save(LS_PREF, pref);
+  const n = c.n;
+  const empty = () => Array.from({ length: n }, () => new Array(n).fill(0));
+  G = {
+    case: c,
+    marks: { SW: empty(), SL: empty(), WL: empty() },
+    hinted: [],
+    struck: new Array(c.clues.length).fill(false),
+    hintsLeft: 3,
+    attempts: 0,
+    startedAt: Date.now(),
+    undoStack: [],
+  };
+  saveGame();
+  renderCase();
+}
+
+// ---------- 案件页 ----------
+function renderCase() {
+  const c = G.case;
+  const LG = LNG();
+  applyLang();
+  document.body.classList.add('in-case');
+  app.innerHTML = `
+    <div class="case-top">
+      <button class="btn small" id="backBtn">← ${tt('档案室', 'Office')}</button>
+      <span class="case-meta">${G.exam ? `⚖️ ${tt('晋升考核', 'PROMOTION EXAM')} · ${c.n}×${c.n}` : `NO.${String(c.seed % 100000).padStart(5, '0')} · ${ENGINE.diffLabel(c.diffId, LG)} ${c.n}×${c.n}`}</span>
+    </div>
+    ${examBarHTML()}
+    <h1 class="case-title">${esc(ENGINE.caseTitle(c, LG))}</h1>
+    <p class="case-intro">${esc(ENGINE.caseIntro(c, LG))}</p>
+    <div class="forensic"><span class="f-label">📋 ${tt('法医报告', "CORONER'S REPORT")}</span>${esc(ENGINE.forensicText(c, LG))}</div>
+
+    <div class="sec">
+      <span class="sec-tab">${tt('案卷档案', 'CASE FILES')}</span>
+      <div class="group-label">${tt('嫌疑人', 'SUSPECTS')}</div>
+      <div class="cards">${c.suspects.map((s, i) => `
+        <div class="pcard">
+          <span class="p-emoji">${s.emoji}</span>
+          <span class="p-body">
+            <span class="p-name">${esc(ENGINE.eN(s, LG))}</span>
+            <span class="p-desc"> — ${esc(ENGINE.eDesc(s, LG))}</span>
+            <span class="chips">${c.motives ? `<span class="attr-chip motive">${tt('疑点', 'Motive')}·${esc(ENGINE.motiveLabel(c.motives[i], LG))}（${ENGINE.motiveCatLabel(c.motives[i], LG) || '?'}）</span>` : ''}${ENGINE.ATTR_KEYS.map(k => `<span class="attr-chip">${ENGINE.attrLabel(k, c.attrs[i][k], LG)}</span>`).join('')}</span>
+            ${c.testimonies && c.testimonies[i] ? `<span class="p-quote">💬 「${esc(ENGINE.testimonyText(c, c.testimonies[i], LG))}」</span>` : ''}
+          </span>
+        </div>`).join('')}</div>
+      <div class="group-label">${tt('可疑物品（每人携带一件）', 'SUSPICIOUS ITEMS (one each)')}</div>
+      <div class="mini-cards">${c.weapons.map(w => `
+        <div class="mini"><span class="m-emoji">${w.emoji}</span> <span class="p-name">${esc(ENGINE.eN(w, LG))}</span>
+        <div class="chips">${ENGINE.WKEYS.map(k => `<span class="attr-chip">${ENGINE.wattrLabel(k, w[k], LG)}</span>`).join('')}</div></div>`).join('')}</div>
+      <div class="group-label">${tt('庄园地点（每人身处一处）', 'ESTATE LOCATIONS (one each)')}</div>
+      <div class="mini-cards">${c.locations.map((l, i) => `
+        <div class="mini"><span class="m-emoji">${l.emoji}</span> <span class="p-name">${esc(ENGINE.eN(l, LG))}</span>
+        <div class="chips"><span class="attr-chip">${l.inMain ? tt('主楼内', 'main house') : tt('主楼外', 'outside')}</span>${i === c.murderLoc ? `<span class="attr-chip scene">${tt('案发现场', 'CRIME SCENE')}</span>` : ''}</div></div>`).join('')}</div>
+    </div>
+
+    <div class="sec">
+      <span class="sec-tab">${tt('调查线索', 'CLUES')}</span>
+      <p class="rule-note">${tt('🔍 侦探守则：现场没有外人干扰——每个地点的一切痕迹（脚印、发丝、烟蒂、字迹、压痕）都只属于案发时身处该地的那个人和TA携带的物品。<br>💬 证词规则：每位嫌疑人都留下了一句证词（见档案卡）——只有凶手在撒谎，其余人句句属实。<br>本案的证词与线索足以唯一推出全部对应关系，无需猜测。', "🔍 Detective's Code: no outsiders interfered — every trace at a location (footprints, hairs, cigarette butts, handwriting, imprints) belongs solely to the person who was there and the item they carried.<br>💬 Testimony rule: every suspect left one statement (see their card) — only the killer lies; everyone else tells the truth.<br>The testimonies and clues are guaranteed to determine the full solution — no guessing needed.")}</p>
+      <ul class="clues">${c.clues.map((cl, i) => `
+        <li class="clue ${G.struck[i] ? 'struck' : ''}" data-i="${i}">
+          <span class="c-num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="c-text">${esc(ENGINE.clueText(c, cl, LG))}</span>
+        </li>`).join('')}</ul>
+      <p class="clue-hint">${tt('点击线索可划掉，表示已用完。', 'Tap a clue to strike it through when used up.')}</p>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head-row">
+        <span class="sec-tab">${tt('推理网格', 'DEDUCTION GRID')}</span>
+        <span class="sec-tools">
+          <button class="btn small" id="undoBtn">↩ ${tt('撤销', 'Undo')}</button>
+          <button class="btn small" id="resetBtn">✦ ${tt('重置', 'Reset')}</button>
+        </span>
+      </div>
+      <div class="grid-scroll"><div class="lgrid" id="lgrid"></div></div>
+      <p class="legend">${tt('点击格子切换：空白 → <span style="color:var(--ink-faint)">✕ 排除</span> → <b>✓ 确认</b>。确认一格会自动排除同行同列。', 'Tap a cell to cycle: blank → <span style="color:var(--ink-faint)">✕ ruled out</span> → <b>✓ confirmed</b>. Confirming auto-crosses its row and column.')}</p>
+    </div>
+
+    <div class="dock"><div class="dock-inner">
+      ${G.exam ? `<button class="btn" id="hintBtn" disabled>🚫 ${tt('提示禁用', 'No Hints')}</button>` : `<button class="btn" id="hintBtn">💡 ${tt('提示', 'Hint')} ×${G.hintsLeft}</button>`}
+      <button class="btn primary" id="accuseBtn">${G.exam ? tt('正式指控(仅一次)', 'FINAL ACCUSATION') : tt('提出指控', 'ACCUSE')}</button>
+    </div></div>
+  `;
+  document.getElementById('backBtn').addEventListener('click', () => {
+    if (G && G.exam) confirmModal(tt('中途离开将计为考核失败（需再破 3 案才能重考），确定吗？', 'Leaving now counts as failing the exam (3 more cases to retry). Continue?'), () => examFail(tt('中途弃考——下次做好准备再来。', 'You walked out mid-exam — come back better prepared.')));
+    else renderHome();
+  });
+  document.getElementById('undoBtn').addEventListener('click', undo);
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    confirmModal(tt('清空网格上的所有标记？', 'Clear every mark on the grid?'), () => {
+      pushUndo();
+      const n = c.n;
+      for (const g of ['SW', 'SL', 'WL']) for (let r = 0; r < n; r++) G.marks[g][r].fill(0);
+      G.hinted = [];
+      saveGame();
+      renderGrid();
+    });
+  });
+  document.getElementById('hintBtn').addEventListener('click', useHint);
+  document.getElementById('accuseBtn').addEventListener('click', showAccuse);
+  app.querySelectorAll('.clue').forEach(el => el.addEventListener('click', () => {
+    const i = +el.dataset.i;
+    G.struck[i] = !G.struck[i];
+    el.classList.toggle('struck', G.struck[i]);
+    playSfx('strike', G.struck[i]);
+    saveGame();
+  }));
+  renderGrid();
+  playSfx('paper'); // 翻开案卷的纸声
+  if (G.exam && G.exam.limit) startExamTimer(); else stopExamTimer();
+}
+
+// L 形网格：列 = 凶器 + 地点；行 = 嫌疑人 + 地点（地点行只对凶器列）
+function renderGrid() {
+  const c = G.case, n = c.n;
+  const grid = document.getElementById('lgrid');
+  if (!grid) return;
+  const avail = Math.min(560, window.innerWidth) - 28 - 24 - 4; // wrap + sec padding + borders
+  const label = n >= 5 ? 66 : 78;
+  const cell = Math.max(22, Math.min(38, Math.floor((avail - label - (2 * n + 1) * 2) / (2 * n))));
+  grid.style.gridTemplateColumns = `${label}px repeat(${2 * n}, ${cell}px)`;
+  grid.style.setProperty('--cell', cell + 'px');
+
+  let html = `<div class="corner">${tt('✓ 确认<br>✕ 排除', '✓ yes<br>✕ no')}</div>`;
+  for (const w of c.weapons) html += `<div class="gh"><span class="h-emoji">${w.emoji}</span><span class="h-name">${esc(ENGINE.eN(w, LNG()))}</span></div>`;
+  for (const l of c.locations) html += `<div class="gh ${'gsep-l'}"><span class="h-emoji">${l.emoji}</span><span class="h-name">${esc(ENGINE.eN(l, LNG()))}</span></div>`;
+  // actually only first location header needs the separator; fix below via nth-child styling inline
+  for (let s = 0; s < n; s++) {
+    const sp = c.suspects[s];
+    html += `<div class="gl"><span class="l-emoji">${sp.emoji}</span><span class="l-name">${esc(ENGINE.eN(sp, LNG()))}</span></div>`;
+    for (let w = 0; w < n; w++) html += cellBtn('SW', s, w, '');
+    for (let l = 0; l < n; l++) html += cellBtn('SL', s, l, l === 0 ? 'gsep-l' : '');
+  }
+  for (let l = 0; l < n; l++) {
+    const lo = c.locations[l];
+    const sepT = l === 0 ? 'gsep-t' : '';
+    html += `<div class="gl ${sepT}"><span class="l-emoji">${lo.emoji}</span><span class="l-name">${esc(ENGINE.eN(lo, LNG()))}</span></div>`;
+    for (let w = 0; w < n; w++) html += cellBtn('WL', w, l, sepT);
+    if (l === 0) html += `<div class="dead gsep-l gsep-t" style="grid-column: span ${n}; grid-row: span ${n};"></div>`;
+  }
+  grid.innerHTML = html;
+  // remove stray separator classes on non-first location headers
+  const headers = grid.querySelectorAll('.gh');
+  headers.forEach((h, idx) => { if (idx !== n) h.classList.remove('gsep-l'); });
+  grid.querySelectorAll('.cell').forEach(el => el.addEventListener('click', () => onCellTap(el)));
+  // 教学引导中重绘网格后，恢复目标格高亮
+  if (TUT.active && TUT.target) {
+    const t = TUT.target;
+    const cell = grid.querySelector(`.cell[data-g="${t.g}"][data-r="${t.r}"][data-c="${t.c}"]`);
+    if (cell) cell.classList.add('tut');
+  }
+}
+function cellBtn(g, r, cIdx, extra) {
+  const v = G.marks[g][r][cIdx];
+  const hinted = G.hinted.includes(`${g}:${r}:${cIdx}`) ? ' hinted' : '';
+  const cls = v === 1 ? 'no' : v === 2 ? 'yes' : '';
+  const glyph = v === 1 ? '✕' : v === 2 ? '✓' : '';
+  return `<button class="cell ${cls} ${extra}${hinted}" data-g="${g}" data-r="${r}" data-c="${cIdx}" aria-label="${g} ${r + 1}-${cIdx + 1}">${glyph}</button>`;
+}
+function onCellTap(el) {
+  const g = el.dataset.g, r = +el.dataset.r, cIdx = +el.dataset.c;
+  // 教学引导中：只响应闪烁的目标格，且直接落下正确标记
+  if (TUT.active && TUT.target) {
+    const t = TUT.target;
+    if (g === t.g && r === t.r && cIdx === t.c) {
+      pushUndo();
+      G.marks[g][r][cIdx] = t.v;
+      if (t.v === 2) autoCross(g, r, cIdx);
+      playSfx('tap', t.v);
+      saveGame();
+      renderGrid();
+      TUT.guided++;
+      TUT.target = null;
+      tutShow();
+    }
+    return;
+  }
+  pushUndo();
+  const cur = G.marks[g][r][cIdx];
+  const next = (cur + 1) % 3;
+  G.marks[g][r][cIdx] = next;
+  if (next === 2) autoCross(g, r, cIdx);
+  playSfx('tap', next);
+  saveGame();
+  renderGrid();
+}
+function autoCross(g, r, cIdx) {
+  const n = G.case.n, M = G.marks[g];
+  for (let c2 = 0; c2 < n; c2++) if (c2 !== cIdx && M[r][c2] === 0) M[r][c2] = 1;
+  for (let r2 = 0; r2 < n; r2++) if (r2 !== r && M[r2][cIdx] === 0) M[r2][cIdx] = 1;
+}
+function pushUndo() {
+  G.undoStack.push(JSON.stringify({ marks: G.marks, hinted: G.hinted }));
+  if (G.undoStack.length > 40) G.undoStack.shift();
+}
+function undo() {
+  const snap = G.undoStack.pop();
+  if (!snap) return;
+  const parsed = JSON.parse(snap);
+  G.marks = parsed.marks;
+  G.hinted = parsed.hinted;
+  saveGame();
+  renderGrid();
+}
+
+// ---------- 提示 ----------
+function useHint() {
+  if (G.exam) { toastModal(tt('考核规则', 'Exam Rules'), tt('晋升考核中禁用提示——全凭真本事，侦探。', 'Hints are disabled during the promotion exam — it is all on you, detective.')); return; }
+  if (G.hintsLeft <= 0) { toastModal(tt('提示已用完', 'No Hints Left'), tt('本案的 3 次提示都用掉了，接下来只能靠自己推理了，侦探。', 'All 3 hints are spent — from here on, it is pure deduction.')); return; }
+  // 可解释提示：给出下一步 + 推理依据
+  const h = ENGINE.nextHint(G.case, G.marks, LNG());
+  if (!h) { toastModal(tt('网格已完成', 'Grid Complete'), tt('所有关系都已推理正确——去提出指控吧！', 'Every relation is correctly deduced — go make your accusation!')); return; }
+  pushUndo();
+  G.marks[h.g][h.r][h.c] = h.v;
+  if (h.v === 2) autoCross(h.g, h.r, h.c);
+  G.hinted.push(`${h.g}:${h.r}:${h.c}`);
+  G.hintsLeft--;
+  saveGame();
+  renderGrid();
+  flashCell(h.g, h.r, h.c);
+  updateHintBtn();
+  toastModal(h.fix ? tt('发现一处笔误', 'Found a Slip') : tt('推理提示', 'Deduction Hint'), h.why + (h.fix ? '' : tt('（已在网格上为你标出，虚线框标记。）', ' (Marked on the grid for you — dashed border.)')));
+  if (TUT.active) tutShow(); // 教学中用了提示：刷新引导目标
+}
+function flashCell(g, r, cc) {
+  const el = document.querySelector(`.cell[data-g="${g}"][data-r="${r}"][data-c="${cc}"]`);
+  if (el) el.classList.add('flash');
+}
+function updateHintBtn() {
+  const b = document.getElementById('hintBtn');
+  if (b) b.textContent = `💡 ${tt('提示', 'Hint')} ×${G.hintsLeft}`;
+}
+
+// ---------- 弹窗 ----------
+let overlayEl = null;
+function openModal(html) {
+  closeModal();
+  overlayEl = document.createElement('div');
+  overlayEl.className = 'overlay';
+  overlayEl.innerHTML = `<div class="modal">${html}</div>`;
+  overlayEl.addEventListener('click', (e) => { if (e.target === overlayEl) closeModal(); });
+  document.body.appendChild(overlayEl);
+}
+function closeModal() {
+  if (overlayEl) { overlayEl.remove(); overlayEl = null; }
+}
+function confirmModal(msg, onYes) {
+  openModal(`
+    <h2>${tt('确认', 'Confirm')}</h2>
+    <p style="font-size:14px">${esc(msg)}</p>
+    <div class="m-actions">
+      <button class="btn" id="mNo">${tt('取消', 'Cancel')}</button>
+      <button class="btn primary" id="mYes">${tt('确定', 'OK')}</button>
+    </div>`);
+  document.getElementById('mNo').addEventListener('click', closeModal);
+  document.getElementById('mYes').addEventListener('click', () => { closeModal(); onYes(); });
+}
+function toastModal(title, msg) {
+  openModal(`
+    <h2>${esc(title)}</h2>
+    <p style="font-size:14px">${esc(msg)}</p>
+    <div class="m-actions"><button class="btn primary" id="mOk">${tt('知道了', 'Got it')}</button></div>`);
+  document.getElementById('mOk').addEventListener('click', closeModal);
+}
+function showHowto(first) {
+  openModal(`
+    <div class="howto">
+      <h2>${tt('玩法说明', 'How to Play')}</h2>
+      <ol>${tt(`
+        <li>每位嫌疑人<b>各</b>携带一件物品、身处一个地点，互不重复。</li>
+        <li><b>痕迹守则</b>：现场没有外人干扰。每个地点的一切痕迹（脚印、发丝、烟蒂、字迹、压痕）都只属于案发时身处该地的人和TA携带的物品。</li>
+        <li><b>证词规则</b>：每位嫌疑人的档案卡上都有一句证词——<b>只有凶手在撒谎</b>，其余人句句属实。先判定某人清白，TA的证词就能当事实用；反过来，谁的证词与已证实的事实矛盾，谁就是凶手。</li>
+        <li>阅读线索，在推理网格上做标记：能排除的画 ✕，能确认的画 ✓。三块网格互相关联，善用交叉推理。</li>
+        <li>有些线索无法立刻落格：<b>"二选一"</b>要等其他线索排除一种可能后再回头兑现；<b>"凶手／凶器侧写"</b>要先用法医报告锁定案发现场那一列再筛选。把多条线索串起来，才是完整的推理链。</li>
+        <li>每一案的线索都经过校验，足以<b>唯一</b>确定全部对应关系——推理链一定走得通，不需要瞎猜。</li>
+        <li><b>法医报告</b>告诉你案发地点——推出谁在那里，谁就是凶手。集齐"凶手、凶器、地点"后提出指控！</li>`, `
+        <li>Each suspect carries <b>one</b> item and stays in <b>one</b> location — no repeats.</li>
+        <li><b>Trace rule</b>: no outsiders interfered. Every trace at a location (footprints, hairs, cigarette butts, handwriting, imprints) belongs solely to the person who was there and the item they carried.</li>
+        <li><b>Testimony rule</b>: every suspect's card carries one statement — <b>only the killer lies</b>; everyone else tells the truth. Prove someone innocent and their words become facts; and whoever's statement contradicts proven facts is the killer.</li>
+        <li>Read the clues and mark the grid: ✕ to rule out, ✓ to confirm. The three grids interlock — use cross-inference.</li>
+        <li>Some clues can't be marked right away: <b>"either/or"</b> clues resolve once another clue kills one branch; <b>killer/weapon profiles</b> apply to the crime-scene column from the coroner's report. Chaining clues together is the real deduction.</li>
+        <li>Every case is verified to have a <b>unique</b> full solution — the chain always works, no guessing needed.</li>
+        <li>The <b>coroner's report</b> names the crime scene — whoever was there is the killer. Pin down killer, weapon and location, then accuse!</li>`)}
+      </ol>
+      <div class="marks-demo">
+        <span><span class="demo-cell no">✕</span> ${tt('排除', 'no')}</span>
+        <span><span class="demo-cell yes">✓</span> ${tt('确认', 'yes')}</span>
+        <span><span class="demo-cell"></span> ${tt('未知', 'unknown')}</span>
+      </div>
+      <div class="m-actions">${first
+        ? `<button class="btn" id="mSkip">${tt('直接开始', 'Skip')}</button><button class="btn primary" id="mTut">🎓 ${tt('新手教学', 'Tutorial')}</button>`
+        : `<button class="btn" id="mTut">🎓 ${tt('新手教学', 'Tutorial')}</button><button class="btn primary" id="mOk">${tt('知道了', 'Got it')}</button>`}</div>
+    </div>`);
+  const okBtn = document.getElementById('mOk');
+  if (okBtn) okBtn.addEventListener('click', closeModal);
+  const skipBtn = document.getElementById('mSkip');
+  if (skipBtn) skipBtn.addEventListener('click', () => {
+    closeModal();
+    pref.seenHowto = true;
+    save(LS_PREF, pref);
+  });
+  document.getElementById('mTut').addEventListener('click', () => {
+    closeModal();
+    tutStart();
+  });
+}
+
+// ---------- 指控 ----------
+let accusePick = { s: -1, w: -1, l: -1 };
+function showAccuse() {
+  const c = G.case;
+  accusePick = { s: -1, w: -1, l: -1 };
+  openModal(`
+    <h2>${G.exam ? '⚖️ ' + tt('正式指控', 'Final Accusation') : tt('提出指控', 'Make Your Accusation')}</h2>
+    <p style="font-size:13px;color:${G.exam ? 'var(--seal)' : 'var(--ink-soft)'};margin:0">${G.exam ? tt('考核规则：只有一次指控机会——指控错误即考核失败，请务必确认后再落章。', 'Exam rules: you get exactly one accusation — a miss fails the exam. Be certain before you stamp.') : tt('指出凶手、凶器与案发地点。指控错误不会结束案件，但完美破案要求一次命中。', 'Name the killer, the weapon and the scene. A wrong accusation does not end the case — but a Perfect Solve requires a first-try hit.')}</p>
+    <div class="pick-label">${tt('凶手是——', 'THE KILLER IS —')}</div>
+    <div class="chip-row">${c.suspects.map((s, i) => `<button class="chip" data-t="s" data-i="${i}">${s.emoji} ${esc(ENGINE.eN(s, LNG()))}</button>`).join('')}</div>
+    <div class="pick-label">${tt('凶器是——', 'THE WEAPON IS —')}</div>
+    <div class="chip-row">${c.weapons.map((w, i) => `<button class="chip" data-t="w" data-i="${i}">${w.emoji} ${esc(ENGINE.eN(w, LNG()))}</button>`).join('')}</div>
+    <div class="pick-label">${tt('案发地点是——', 'THE SCENE IS —')}</div>
+    <div class="chip-row">${c.locations.map((l, i) => `<button class="chip" data-t="l" data-i="${i}">${l.emoji} ${esc(ENGINE.eN(l, LNG()))}</button>`).join('')}</div>
+    <div class="m-actions">
+      <button class="btn" id="mNo">${tt('再想想', 'Think Again')}</button>
+      <button class="btn primary" id="mGo" disabled>${tt('确认指控', 'ACCUSE')}</button>
+    </div>
+    ${!G.exam && G.attempts >= 2 ? `<div style="text-align:center;margin-top:8px"><button class="linkish" id="giveUp">${G.replay ? tt('调查陷入僵局，放弃本次重启', 'Stuck — abandon this re-investigation') : stats.shields > 0 ? tt('调查陷入僵局，查看真相（将消耗 1 枚护盾）', 'Stuck — reveal the truth (uses 1 shield)') : tt('调查陷入僵局，查看真相（连胜将清零）', 'Stuck — reveal the truth (streak resets)')}</button></div>` : ''}
+  `);
+  overlayEl.querySelectorAll('.chip').forEach(el => el.addEventListener('click', () => {
+    const t = el.dataset.t, i = +el.dataset.i;
+    accusePick[t] = i;
+    overlayEl.querySelectorAll(`.chip[data-t="${t}"]`).forEach(x => x.classList.toggle('sel', x === el));
+    document.getElementById('mGo').disabled = !(accusePick.s >= 0 && accusePick.w >= 0 && accusePick.l >= 0);
+  }));
+  document.getElementById('mNo').addEventListener('click', closeModal);
+  document.getElementById('mGo').addEventListener('click', doAccuse);
+  const gu = document.getElementById('giveUp');
+  if (gu) gu.addEventListener('click', revealTruth);
+}
+function doAccuse() {
+  const c = G.case;
+  const right = accusePick.s === c.murderer && accusePick.w === c.wOf[c.murderer] && accusePick.l === c.murderLoc;
+  G.attempts++;
+  // 晋升考核：一锤定音
+  if (G.exam) {
+    tutEnd();
+    if (right) examPass();
+    else examFail(tt('指控错误——真凶从你眼皮底下溜走了。', 'Wrong accusation — the true culprit slipped right past you.'));
+    return;
+  }
+  if (right) {
+    tutEnd();
+    const isReplay = !!G.replay;
+    const res = computeScore(isReplay);
+    const finalScore = isReplay ? Math.round(res.score / 2) : res.score; // 平反得 50%
+    const perfect = !isReplay && G.attempts === 1 && G.hintsLeft === 3;
+    let shieldGained = false;
+    if (isReplay) {
+      stats.solved++;
+      stats.exonerated++;
+      stats.totalScore += finalScore;
+      const idx = archive.cold.findIndex(r => r.id === G.replay);
+      if (idx >= 0) {
+        const rec = archive.cold.splice(idx, 1)[0];
+        rec.status = 'EXONERATED';
+        rec.score = finalScore; rec.grade = res.grade;
+        rec.hintsUsed = res.hintsUsed; rec.attempts = G.attempts;
+        rec.timeSec = res.secs; rec.date = Date.now();
+        delete rec.caseData;
+        archive.solved.unshift(rec);
+      }
+    } else {
+      stats.solved++;
+      stats.streak++;
+      stats.best = Math.max(stats.best, stats.streak);
+      if (perfect) stats.perfect++;
+      stats.totalScore += finalScore;
+      if (G.attempts === 1) stats.oneShotWins++;
+      if (res.grade === 'S') stats.sCount++;
+      if (c.diffId === 'master') stats.masterNoHint = res.hintsUsed === 0 ? stats.masterNoHint + 1 : 0;
+      if (c.diffId !== 'novice' && res.secs <= 300) stats.fastWins++;
+      stats.winsToShield++;
+      if (stats.winsToShield >= 10) { // 每 10 次破案获得 1 枚护盾（上限 3）
+        stats.winsToShield = 0;
+        if (stats.shields < 3) { stats.shields++; shieldGained = true; }
+      }
+      archive.solved.unshift(makeRecord('SOLVED', { ...res, score: finalScore }));
+      if (archive.solved.length > 200) archive.solved.length = 200;
+    }
+    // 段位进度（防刷：低于段位主难度的案件减半）
+    let progressGain = 0, progressReduced = false;
+    if (stats.rank < RANK_LADDER.length - 1) {
+      progressReduced = DIFF_ORDER[c.diffId] < DIFF_ORDER[HOME_DIFF[stats.rank]];
+      progressGain = progressReduced ? Math.round(finalScore / 2) : finalScore;
+      stats.rankProgress += progressGain;
+    }
+    if (!isReplay && stats.examCooldown > 0) stats.examCooldown--; // 破案推进重考冷却
+    const unlocked = checkTitles();
+    saveArchive();
+    save(LS_STATS, stats);
+    const truth = truthHTML(c);
+    const breakdown = scoreRowsHTML(res, finalScore, isReplay);
+    const badges = [];
+    if (perfect) badges.push(tt('⭐ 完美破案', '⭐ Perfect Solve'));
+    if (shieldGained) badges.push(tt('🛡️ 获得连胜护盾', '🛡️ Streak Shield earned'));
+    for (const t of unlocked) badges.push(tt(`🏅 解锁称号「${t.name}」`, `🏅 Title unlocked: "${t.en}"`));
+    G = null;
+    saveGame();
+    openModal(`
+      <div class="stamp-wrap"><span class="stamp">${isReplay ? tt('平反', 'EXONERATED') : tt('结案', 'CASE CLOSED')}</span></div>
+      <h2 style="text-align:center">${isReplay ? tt('沉冤得雪！', 'Justice, At Last!') : tt('真相大白！', 'The Truth Is Out!')}</h2>
+      ${truth}
+      ${breakdown}
+      ${badges.length ? `<p style="text-align:center;font-size:13px;color:var(--seal);font-weight:700;margin:8px 0 0">${badges.join('　')}</p>` : ''}
+      <div class="result-stats">
+        ${tt(`用时 ${Math.floor(res.secs / 60)} 分 ${res.secs % 60} 秒`, `Time ${Math.floor(res.secs / 60)}m ${res.secs % 60}s`)} · ${tt('声望', 'Renown')} ${stats.totalScore}<br>
+        ${tt('已破', 'Solved')} ${stats.solved} · ${tt('连胜', 'Streak')} ${stats.streak}${stats.shields ? ' 🛡×' + stats.shields : ''} · ${tt('段位', 'Rank')}「${rankName(stats.rank)}」${stats.rank < RANK_LADDER.length - 1 ? `<br>${tt('段位进度', 'Rank progress')} +${progressGain}${progressReduced ? tt('（低于段位主难度，减半）', ' (below home difficulty, halved)') : ''} → ${stats.rankProgress}/${RANK_LADDER[stats.rank].threshold}${stats.rankProgress >= RANK_LADDER[stats.rank].threshold && stats.examCooldown === 0 ? ` · <b style="color:var(--seal)">${tt('可挑战晋升考核！', 'Promotion exam unlocked!')}</b>` : ''}` : ''}
+      </div>
+      <div class="m-actions">
+        <button class="btn" id="mHome">${tt('回档案室', 'Back to Office')}</button>
+        <button class="btn primary" id="mNext">${tt('下一案', 'Next Case')}</button>
+      </div>`);
+    document.getElementById('mHome').addEventListener('click', () => { closeModal(); renderHome(); });
+    document.getElementById('mNext').addEventListener('click', () => { closeModal(); startCase(pref.diff); });
+    setTimeout(() => playSfx('stamp', true), 250); // 结案重章，对准动画落章
+    setTimeout(() => playSfx('win'), 520);         // 凯旋短曲紧随章落
+  } else {
+    G.lastAccuse = { s: accusePick.s, w: accusePick.w, l: accusePick.l }; // 供失败复盘
+    saveGame();
+    openModal(`
+      <div class="stamp-wrap"><span class="stamp grey">${tt('证据不足', 'INSUFFICIENT')}</span></div>
+      <h2 style="text-align:center">${tt('指控被驳回', 'Accusation Dismissed')}</h2>
+      <p style="font-size:14px;text-align:center">${tt(`凶手冷笑着走出了审讯室。<br>回到网格，重新核对线索吧。（第 ${G.attempts} 次指控失败）`, `The killer smirks and walks out of the interrogation room.<br>Back to the grid — recheck your clues. (Failed accusation #${G.attempts})`)}</p>
+      <div class="m-actions"><button class="btn primary" id="mOk">${tt('继续调查', 'Keep Investigating')}</button></div>`);
+    document.getElementById('mOk').addEventListener('click', closeModal);
+    setTimeout(() => playSfx('stamp', false), 250); // 驳回轻章
+    setTimeout(() => playSfx('fail'), 520);         // 叹息乐句
+  }
+}
+function truthHTML(c) {
+  const LG = LNG();
+  const m = c.suspects[c.murderer], w = c.weapons[c.wOf[c.murderer]], l = c.locations[c.murderLoc];
+  const mN = esc(ENGINE.eN(m, LG)), wN = esc(ENGINE.eN(w, LG)), lN = esc(ENGINE.eN(l, LG));
+  const lie = c.testimonies && c.testimonies[c.murderer]
+    ? `<div class="truth" style="margin-top:6px">🎭 ${tt(`${m.emoji} ${mN}的证词「${esc(ENGINE.testimonyText(c, c.testimonies[c.murderer], LG))}」是彻头彻尾的谎言。`, `${m.emoji} ${mN}'s testimony — "${esc(ENGINE.testimonyText(c, c.testimonies[c.murderer], LG))}" — was a lie through and through.`)}</div>` : '';
+  return `<div class="truth">${tt(`凶手是 <b>${m.emoji} ${mN}</b>，在 <b>${l.emoji} ${lN}</b> 用 <b>${w.emoji} ${wN}</b> 犯下了罪行。`, `The killer is <b>${m.emoji} ${mN}</b> — struck in the <b>${l.emoji} ${lN}</b> with the <b>${w.emoji} ${wN}</b>.`)}</div>${lie}`;
+}
+function revealTruth() {
+  tutEnd();
+  const c = G.case;
+  const isReplay = !!G.replay;
+  const secs = Math.max(1, Math.round((Date.now() - G.startedAt) / 1000));
+  // 失败复盘：最后一次指控的对错拆解
+  let review = '';
+  if (G.lastAccuse) {
+    const la = G.lastAccuse;
+    const mk = (ok) => (ok ? `<b style="color:var(--seal)">${tt('对了', 'right')}</b>` : tt('错了', 'wrong'));
+    const laName = esc(ENGINE.eN(c.suspects[la.s], LNG()));
+    review = `<div class="truth" style="margin-top:6px">${tt(`复盘：你最后指控 <b>${c.suspects[la.s].emoji} ${laName}</b>——凶手${mk(la.s === c.murderer)}、凶器${mk(la.w === c.wOf[c.murderer])}、地点${mk(la.l === c.murderLoc)}。`, `Review: your last accusation was <b>${c.suspects[la.s].emoji} ${laName}</b> — killer ${mk(la.s === c.murderer)}, weapon ${mk(la.w === c.wOf[c.murderer])}, scene ${mk(la.l === c.murderLoc)}.`)}</div>`;
+  }
+  let noteHTML = '';
+  if (isReplay) {
+    // 冷案重启失败：不动连胜、不计失败，冷案原样保留可再来
+    noteHTML = `<p style="font-size:13px;color:var(--ink-soft);text-align:center">${tt('这桩悬案仍未解开——它还躺在冷案库里，随时可以再启。', 'This case remains cold — it stays in the archive, ready whenever you are.')}</p>`;
+  } else {
+    let shieldUsed = false;
+    if (stats.shields > 0) { stats.shields--; shieldUsed = true; } // 护盾吸收本次失败
+    else stats.streak = 0;
+    stats.failed++;
+    const rec = makeRecord('COLD', null);
+    rec.timeSec = secs;
+    archive.cold.unshift(rec);
+    if (archive.cold.length > 30) archive.cold.length = 30;
+    saveArchive();
+    save(LS_STATS, stats);
+    noteHTML = `<p style="font-size:13px;color:var(--ink-soft);text-align:center">${shieldUsed ? tt('🛡️ 护盾碎裂，替你保住了连胜。', '🛡️ A shield shattered and saved your streak. ') : tt('连胜已清零。', 'Your streak has reset. ')}${tt('案件已存入冷案库——重启调查成功即可「平反」。', 'The case is filed as cold — reopen and solve it to earn an Exoneration.')}</p>`;
+  }
+  G = null;
+  saveGame();
+  openModal(`
+    <div class="stamp-wrap"><span class="stamp grey">${tt('悬案', 'COLD CASE')}</span></div>
+    <h2 style="text-align:center">${tt('真相封存于档案', 'The Truth Goes Into the Files')}</h2>
+    ${truthHTML(c)}
+    ${review}
+    ${noteHTML}
+    <div class="m-actions">
+      <button class="btn" id="mArch">${tt('去冷案库', 'Cold Cases')}</button>
+      <button class="btn primary" id="mNext">${tt('下一案', 'Next Case')}</button>
+    </div>`);
+  document.getElementById('mArch').addEventListener('click', () => { closeModal(); archTab = 'cold'; renderArchive(); });
+  document.getElementById('mNext').addEventListener('click', () => { closeModal(); startCase(pref.diff); });
+  setTimeout(() => playSfx('stamp', false), 250); // 悬案轻章
+  setTimeout(() => playSfx('fail'), 520);         // 叹息乐句
+}
+
+// ---------- 冷案重启 / 卷宗库 / 称号墙 ----------
+function startColdCase(id) {
+  const rec = archive.cold.find(r => r.id === id);
+  if (!rec || !rec.caseData) return;
+  const doStart = () => {
+    tutEnd();
+    const c = rec.caseData, n = c.n;
+    const empty = () => Array.from({ length: n }, () => new Array(n).fill(0));
+    G = {
+      case: c,
+      marks: { SW: empty(), SL: empty(), WL: empty() },
+      hinted: [],
+      struck: new Array(c.clues.length).fill(false),
+      hintsLeft: 3, attempts: 0, startedAt: Date.now(), undoStack: [],
+      replay: rec.id,
+    };
+    saveGame();
+    renderCase();
+  };
+  if (G) confirmModal(tt('重启这桩冷案将放弃当前进行中的案件，确定吗？', 'Reopening this cold case will discard the case in progress. Continue?'), doStart);
+  else doStart();
+}
+
+function renderArchive() {
+  document.body.classList.remove('in-case');
+  const total = stats.solved + stats.failed;
+  const rate = total ? Math.round((stats.solved / total) * 100) : 0;
+  const list = archTab === 'solved' ? archive.solved : archive.cold;
+  const filtered = archFilter === 'all' ? list : list.filter(r => r.diffId === archFilter);
+  const dLabel = (d) => ENGINE.diffLabel(d, LNG());
+  const fmtT = (s) => tt(`${Math.floor(s / 60)}分${s % 60}秒`, `${Math.floor(s / 60)}m ${s % 60}s`);
+  const cards = filtered.slice(0, 60).map(r => `
+    <div class="arch-card">
+      <div class="ac-head">
+        <span class="ac-title">${esc(r.title)}</span>
+        ${r.grade ? `<span class="grade-badge g-${r.grade}">${r.grade}</span>` : ''}
+      </div>
+      <div class="ac-meta">${dLabel(r.diffId)} · ${new Date(r.date).toLocaleDateString()}${r.status === 'EXONERATED' ? ` · <b class="exon">${tt('平反', 'EXONERATED')}</b>` : ''}</div>
+      ${archTab === 'solved' ? `
+        <div class="ac-line">${tt(`得分 ${r.score} · 用时 ${fmtT(r.timeSec)} · 提示 ${r.hintsUsed} 次 · 指控 ${r.attempts} 次`, `Score ${r.score} · Time ${fmtT(r.timeSec)} · Hints ${r.hintsUsed} · Accusations ${r.attempts}`)}</div>
+        <div class="ac-line">${tt(`真凶 ${esc(r.culprit)}，在${esc(r.location)}使用${esc(r.weapon)}`, `Culprit: ${esc(r.culprit)} — in ${esc(r.location)} with ${esc(r.weapon)}`)}</div>` : `
+        <div class="ac-line">${tt('你的指控', 'Your accusation')}: ${r.accusation ? esc(r.accusation) : '—'}　${tt('真凶', 'Culprit')}: ${esc(r.culprit)}</div>
+        <button class="btn small reopen" data-id="${r.id}">🔍 ${tt('重启调查', 'Reopen Case')}</button>`}
+    </div>`).join('');
+  app.innerHTML = `
+    <div class="case-top">
+      <button class="btn small" id="backBtn">← ${tt('档案室', 'Office')}</button>
+      <span class="case-meta">${tt('卷宗库', 'ARCHIVE')}</span>
+    </div>
+    <div class="stats four">
+      <div class="stat"><b>${stats.solved}</b><span>${tt('总破案', 'SOLVED')}</span></div>
+      <div class="stat"><b>${rate}%</b><span>${tt('破案率', 'SOLVE RATE')}</span></div>
+      <div class="stat"><b>${stats.sCount}</b><span>${tt('S 级', 'S RANKS')}</span></div>
+      <div class="stat"><b>${stats.exonerated}</b><span>${tt('已平反', 'EXONERATED')}</span></div>
+    </div>
+    <div class="sec">
+      <span class="sec-tab">${tt('卷宗', 'DOSSIERS')}</span>
+      <div class="tabs">
+        <button class="chip ${archTab === 'solved' ? 'sel' : ''}" data-tab="solved">${tt('已破', 'Solved')} ${archive.solved.length}</button>
+        <button class="chip ${archTab === 'cold' ? 'sel' : ''}" data-tab="cold">${tt('冷案', 'Cold')} ${archive.cold.length}</button>
+        <span style="flex:1"></span>
+        ${['all', 'novice', 'expert', 'master'].map(d => `<button class="chip mini-chip ${archFilter === d ? 'sel' : ''}" data-f="${d}">${d === 'all' ? tt('全部', 'All') : dLabel(d)}</button>`).join('')}
+      </div>
+      <div class="cards" style="margin-top:10px">${cards || `<p class="clue-hint">${tt('这里还空着——去破你的第一桩案子吧。', 'Nothing here yet — go crack your first case.')}</p>`}</div>
+      ${filtered.length > 60 ? `<p class="clue-hint">${tt(`仅显示最近 60 件（共 ${filtered.length} 件）`, `Showing the latest 60 of ${filtered.length}`)}</p>` : ''}
+    </div>`;
+  document.getElementById('backBtn').addEventListener('click', renderHome);
+  app.querySelectorAll('[data-tab]').forEach(el => el.addEventListener('click', () => { archTab = el.dataset.tab; renderArchive(); }));
+  app.querySelectorAll('[data-f]').forEach(el => el.addEventListener('click', () => { archFilter = el.dataset.f; renderArchive(); }));
+  app.querySelectorAll('.reopen').forEach(el => el.addEventListener('click', () => startColdCase(el.dataset.id)));
+  playSfx('paper');
+}
+
+function showTitles() {
+  const rows = TITLES.map(t => {
+    const cur = Math.min(t.get(stats), t.target);
+    const done = stats.titles.includes(t.id);
+    const equipped = pref.title === t.id;
+    return `
+      <div class="title-row ${done ? 'done' : ''}">
+        <div class="t-head"><b>${titleName(t)}</b>
+          ${done ? `<button class="btn small equip" data-id="${t.id}">${equipped ? tt('✓ 已装备', '✓ Equipped') : tt('装备', 'Equip')}</button>` : `<span class="t-prog">${cur}/${t.target}</span>`}
+        </div>
+        <div class="t-desc">${titleDesc(t)}</div>
+        <div class="pbar"><i style="width:${Math.round((cur / t.target) * 100)}%"></i></div>
+      </div>`;
+  }).join('');
+  const lic = (stats.licenses || []).map(l => `
+    <div class="title-row done">
+      <div class="t-head"><b>📜 ${l.rank} · ${tt('侦探执照', 'Detective License')}</b><span class="t-prog">${new Date(l.date).toLocaleDateString()}</span></div>
+    </div>`).join('');
+  openModal(`
+    <h2>${tt('称号墙', 'Title Wall')}</h2>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 10px">${tt('解锁后可装备 1 个称号，展示在档案封面上。再点一次可卸下。', 'Unlock titles and equip one to display on your case-file cover. Tap again to unequip.')}</p>
+    ${lic ? `<div class="pick-label" style="margin-top:0">${tt('段位执照', 'RANK LICENSES')}</div>${lic}<div class="pick-label">${tt('成就称号', 'ACHIEVEMENT TITLES')}</div>` : ''}
+    <div class="titles">${rows}</div>
+    <div class="m-actions"><button class="btn primary" id="mOk">${tt('关闭', 'Close')}</button></div>`);
+  document.getElementById('mOk').addEventListener('click', () => { closeModal(); renderHome(); });
+  overlayEl.querySelectorAll('.equip').forEach(el => el.addEventListener('click', () => {
+    pref.title = pref.title === el.dataset.id ? '' : el.dataset.id;
+    save(LS_PREF, pref);
+    playSfx('select');
+    showTitles();
+  }));
+}
+
+// ---------- 新手教学 ----------
+// 前 4 步讲解界面，随后用可解释推理器（nextHint）带玩家做 3 步真实推理
+let TUT = { active: false, step: 0, guided: 0, target: null };
+const tutIntroSteps = () => [
+  { at: '.forensic', tag: tt('第 1 步 · 案情', 'Step 1 · The Case'), text: tt('欢迎，侦探！先看这份<b>法医报告</b>——它锁定了案发地点。案发时身处那里的人，就是凶手。全案目标：找出<b>凶手、凶器、案发地点</b>。', "Welcome, detective! Start with the <b>coroner's report</b> — it names the crime scene. Whoever was there is the killer. Your goal: identify the <b>killer, weapon and scene</b>.") },
+  { at: '.pcard', tag: tt('第 2 步 · 档案', 'Step 2 · The Files'), text: tt('每位嫌疑人<b>各带一件物品、各在一个地点</b>，互不重复。档案卡上有 TA 的特征标签和一句证词——铁律：<b>只有凶手撒谎</b>，其余人句句属实。', "Each suspect carries <b>one item</b> and stays in <b>one location</b> — no repeats. Their card shows trait tags and one testimony — iron rule: <b>only the killer lies</b>.") },
+  { at: '.rule-note', tag: tt('第 3 步 · 线索', 'Step 3 · The Clues'), text: tt('这里是调查线索。每条线索都能转化成下方网格上的标记：能排除的画 <b>✕</b>，能确认的画 <b style="color:var(--seal)">✓</b>。', 'These are your clues. Each one becomes marks on the grid below: <b>✕</b> to rule out, <b style="color:var(--seal)">✓</b> to confirm.') },
+  { at: '#lgrid', tag: tt('第 4 步 · 网格', 'Step 4 · The Grid'), text: tt('这就是推理网格：上半是嫌疑人×物品/地点，下半是物品×地点。现在跟我做<b>三步真正的推理</b>——', 'This is the deduction grid: suspects × items/locations on top, items × locations below. Now follow me through <b>three real deductions</b> —') },
+];
+function tutEnd() {
+  TUT = { active: false, step: 0, guided: 0, target: null };
+  document.body.classList.remove('tut-on');
+  const p = document.getElementById('tutPanel');
+  if (p) p.remove();
+  document.querySelectorAll('.cell.tut').forEach(el => el.classList.remove('tut'));
+}
+function tutStart() {
+  pref.seenHowto = true;
+  save(LS_PREF, pref);
+  const begin = () => {
+    // 教学专用超简单配置：不放关联线索、允许更多直白线索
+    startCase('novice', { relSeeds: 0, minRel: 0, allowDirect: true, maxDirect: 2, indirectFirst: false });
+    TUT = { active: true, step: 0, guided: 0, target: null };
+    tutShow();
+  };
+  if (G) confirmModal(tt('开始新手教学将放弃当前进行中的案件，确定吗？', 'Starting the tutorial will discard the case in progress. Continue?'), begin);
+  else begin();
+}
+function tutShow() {
+  if (!TUT.active) return;
+  document.body.classList.add('tut-on');
+  let p = document.getElementById('tutPanel');
+  if (!p) {
+    p = document.createElement('div');
+    p.id = 'tutPanel';
+    p.className = 'tut-panel';
+    document.body.appendChild(p);
+  }
+  TUT.target = null;
+  document.querySelectorAll('.cell.tut').forEach(el => el.classList.remove('tut'));
+  // 讲解阶段
+  const intro = tutIntroSteps();
+  if (TUT.step < intro.length) {
+    const s = intro[TUT.step];
+    p.innerHTML = `<span class="tp-tag">🎓 ${tt('新手教学', 'TUTORIAL')} · ${s.tag}</span>${s.text}<br><button class="btn primary" id="tutNext">${TUT.step === intro.length - 1 ? tt('开始推理', 'Start Deducing') : tt('下一步', 'Next')}</button>`;
+    const el = document.querySelector(s.at);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('tutNext').addEventListener('click', () => { TUT.step++; tutShow(); playSfx('select'); });
+    return;
+  }
+  // 引导推理阶段：用可解释推理器现场教学
+  const h = (G && G.marks) ? ENGINE.nextHint(G.case, G.marks, LNG()) : null;
+  if (!h || h.fix || TUT.guided >= 3) {
+    p.innerHTML = `<span class="tp-tag">🎓 ${tt('新手教学 · 出师', 'TUTORIAL · GRADUATED')}</span>${tt('剩下的交给你了，侦探！卡住时点「💡 提示」——它会连同<b>推理依据</b>一起告诉你。推满网格后，点「提出指控」锁定真凶。', 'The rest is yours, detective! If you get stuck, tap "💡 Hint" — it explains the <b>reasoning</b> behind every answer. Fill the grid, then hit "ACCUSE" to close the case.')}<br><button class="btn primary" id="tutNext">${tt('开始破案', 'Take the Case')}</button>`;
+    document.getElementById('tutNext').addEventListener('click', () => { tutEnd(); playSfx('select'); });
+    return;
+  }
+  TUT.target = h;
+  p.innerHTML = `<span class="tp-tag">🎓 ${tt('新手教学 · 推理', 'TUTORIAL · DEDUCTION')} ${TUT.guided + 1}/3</span>${h.why}<br>👉 ${tt('点击网格上<b>闪烁的格子</b>，标上', 'Tap the <b>flashing cell</b> on the grid and mark it')} ${h.v === 2 ? '<b style="color:var(--seal)">✓</b>' : '<b>✕</b>'}${tt('。', '.')}`;
+  const cell = document.querySelector(`.cell[data-g="${h.g}"][data-r="${h.r}"][data-c="${h.c}"]`);
+  if (cell) {
+    cell.classList.add('tut');
+    cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// ---------- 晋升考核 ----------
+let examTimerId = null;
+function stopExamTimer() { if (examTimerId) { clearInterval(examTimerId); examTimerId = null; } }
+function startExamTimer() {
+  stopExamTimer();
+  const tick = () => {
+    if (!G || !G.exam || !G.exam.limit) { stopExamTimer(); return; }
+    const remain = Math.ceil(G.exam.limit - (Date.now() - G.startedAt) / 1000);
+    const el = document.getElementById('examClock');
+    if (el) el.textContent = remain > 0 ? `${Math.floor(remain / 60)}:${String(Math.max(0, remain) % 60).padStart(2, '0')}` : '0:00';
+    if (remain <= 0) { stopExamTimer(); examFail(tt('沙漏漏尽——时间到了，真相仍未落定。', 'The sand has run out — time is up, and the truth remains unsettled.')); }
+  };
+  tick();
+  examTimerId = setInterval(tick, 1000);
+}
+function examDesc(r) {
+  const ex = RANK_LADDER[r].exam;
+  const parts = [`${ex.n}×${ex.n}`, tt('禁提示', 'no hints'), tt('仅一次指控', 'one accusation only')];
+  if (ex.timeLimit) parts.push(tt(`限时 ${Math.round(ex.timeLimit / 60)} 分钟`, `${Math.round(ex.timeLimit / 60)}-minute limit`));
+  if (ex.allRel) parts.push(tt('全关联线索', 'all relational clues'));
+  return parts.join(' · ');
+}
+function examBarHTML() {
+  if (!G || !G.exam) return '';
+  const rules = [tt('禁用提示', 'no hints'), tt('仅一次指控', 'one accusation')];
+  if (G.exam.limit) rules.push(tt(`限时 ${Math.round(G.exam.limit / 60)} 分钟`, `${Math.round(G.exam.limit / 60)}-min limit`));
+  return `<div class="exam-bar">⚖️ ${rankName(G.exam.r)} → ${rankName(G.exam.r + 1)} ${tt('晋升考核', 'Promotion Exam')} · ${rules.join(' · ')}${G.exam.limit ? ` · ${tt('剩余', 'left')} <b id="examClock">--:--</b>` : ''}</div>`;
+}
+function showExamIntro() {
+  const r = stats.rank;
+  openModal(`
+    <h2>⚖️ ${tt('晋升考核', 'Promotion Exam')}</h2>
+    <p style="font-size:14px">${tt(`通过这场考核，你将从<b>${rankName(r)}</b>晋升为<b style="color:var(--seal)">${rankName(r + 1)}</b>。`, `Pass this exam to rise from <b>${rankName(r)}</b> to <b style="color:var(--seal)">${rankName(r + 1)}</b>.`)}</p>
+    <div class="truth">${tt(`考核规则：${examDesc(r)}。<br>指控错误、超时或中途弃考都计为失败——失败不掉段，但需再成功破 3 案才能重考。`, `Exam rules: ${examDesc(r)}.<br>A wrong accusation, timeout, or walking out all count as failure — you keep your rank, but must solve 3 more cases before retrying.`)}</div>
+    <div class="m-actions">
+      <button class="btn" id="mNo">${tt('再准备准备', 'Not yet')}</button>
+      <button class="btn primary" id="mGo2">${tt('进入考核', 'Begin Exam')}</button>
+    </div>`);
+  document.getElementById('mNo').addEventListener('click', closeModal);
+  document.getElementById('mGo2').addEventListener('click', () => { closeModal(); startExamCase(); });
+}
+function startExamCase() {
+  tutEnd();
+  const r = stats.rank;
+  const ex = RANK_LADDER[r].exam;
+  const begin = () => {
+    const tweak = { n: ex.n, allowDirect: false, maxDirect: 0, indirectFirst: true, relSeeds: ex.allRel ? 4 : 3, minRel: ex.allRel ? 4 : 2 };
+    const recent = pref.recent || { s: [], w: [], l: [] };
+    const c = ENGINE.generateCase(ex.diffId, (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0, recent, tweak);
+    if (!c) { alert(tt('考核案卷生成失败，请再试一次', 'Exam case generation failed — please try again')); return; }
+    const n = c.n;
+    const empty = () => Array.from({ length: n }, () => new Array(n).fill(0));
+    G = {
+      case: c,
+      marks: { SW: empty(), SL: empty(), WL: empty() },
+      hinted: [],
+      struck: new Array(c.clues.length).fill(false),
+      hintsLeft: 0, attempts: 0, startedAt: Date.now(), undoStack: [],
+      exam: { r, limit: ex.timeLimit || 0 },
+    };
+    saveGame();
+    renderCase();
+  };
+  if (G) confirmModal(tt('进入考核将放弃当前进行中的案件，确定吗？', 'Entering the exam will discard the case in progress. Continue?'), begin);
+  else begin();
+}
+function examPass() {
+  stopExamTimer();
+  stats.rank++;
+  stats.rankProgress = 0;
+  const newName = RANK_LADDER[stats.rank].name;
+  stats.licenses.push({ rank: newName, date: Date.now() });
+  save(LS_STATS, stats);
+  G = null;
+  saveGame();
+  openModal(`
+    <div class="stamp-wrap"><span class="stamp">${tt('晋级', 'PROMOTED')}</span></div>
+    <h2 style="text-align:center">${tt('考核通过！', 'Exam Passed!')}</h2>
+    <div class="license-card">
+      <div class="lc-title">${tt('谜 案 手 册 · 侦 探 执 照', 'CASEBOOK · DETECTIVE LICENSE')}</div>
+      <div class="lc-rank">${isEn() ? RANK_LADDER[stats.rank].en : newName}</div>
+      <div class="lc-meta">${tt(`颁发日期 ${new Date().toLocaleDateString()} · 一案定音，凭真才实学`, `Issued ${new Date().toLocaleDateString()} · One case, one verdict — earned on merit`)}</div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-soft);text-align:center;margin-top:10px">${stats.rank < RANK_LADDER.length - 1 ? tt(`段位进度已重置——攒满 ${RANK_LADDER[stats.rank].threshold} 即可挑战下一级考核（${examDesc(stats.rank)}）。`, `Rank progress reset — fill ${RANK_LADDER[stats.rank].threshold} to attempt the next exam (${examDesc(stats.rank)}).`) : tt('你已站上侦探界的巅峰——传奇之名，实至名归。', 'You stand at the very summit — the name Legendary is yours by right.')}</p>
+    <div class="m-actions">
+      <button class="btn" id="mHome">${tt('回档案室', 'Back to Office')}</button>
+      <button class="btn primary" id="mNext">${tt('下一案', 'Next Case')}</button>
+    </div>`);
+  document.getElementById('mHome').addEventListener('click', () => { closeModal(); renderHome(); });
+  document.getElementById('mNext').addEventListener('click', () => { closeModal(); startCase(pref.diff); });
+  setTimeout(() => playSfx('stamp', true), 250);
+  setTimeout(() => playSfx('win'), 520);
+}
+function examFail(reason) {
+  stopExamTimer();
+  stats.examCooldown = 3;
+  save(LS_STATS, stats);
+  G = null;
+  saveGame();
+  openModal(`
+    <div class="stamp-wrap"><span class="stamp grey">${tt('考核失败', 'EXAM FAILED')}</span></div>
+    <h2 style="text-align:center">${tt('还差一口气', 'So Close')}</h2>
+    <p style="font-size:14px;text-align:center">${esc(reason)}<br>${tt('段位保留不降。再成功破 <b>3</b> 案即可重新挑战。', 'Your rank is safe. Solve <b>3</b> more cases to try again.')}</p>
+    <div class="m-actions">
+      <button class="btn" id="mHome">${tt('回档案室', 'Back to Office')}</button>
+      <button class="btn primary" id="mNext">${tt('去破案', 'Go Solve Cases')}</button>
+    </div>`);
+  document.getElementById('mHome').addEventListener('click', () => { closeModal(); renderHome(); });
+  document.getElementById('mNext').addEventListener('click', () => { closeModal(); startCase(pref.diff); });
+  setTimeout(() => playSfx('stamp', false), 250);
+  setTimeout(() => playSfx('fail'), 520);
+}
+
+// ---------- 背景音乐（原创氛围曲，Web Audio 实时合成，无外部资源） ----------
+const BGM = (() => {
+  let ctx = null, master = null, sfxBus = null, noiseBuf = null;
+  let chordTimer = null, popTimer = null, playing = false, step = 0;
+  // 原创侦探推理循环（D 小调"蹑手蹑脚"式）：Dm → Gm7 → B♭7 → A7
+  // walk = 低音潜行走线（含半音下探，每拍一音），stab = 反拍小调和弦轻点
+  const BPM = 96, SPB = 60 / BPM, SEG = SPB * 8; // 每个和弦 2 小节
+  const CHORDS = [
+    { walk: [73.42, 87.31, 82.41, 77.78], stab: [293.66, 349.23, 440.00] },    // Dm：D-F-E-E♭ 半音下探
+    { walk: [98.00, 116.54, 110.00, 103.83], stab: [233.08, 293.66, 349.23] }, // Gm7
+    { walk: [116.54, 146.83, 130.81, 123.47], stab: [233.08, 293.66, 415.30] },// B♭7
+    { walk: [110.00, 138.59, 164.81, 98.00], stab: [277.18, 329.63, 392.00] }, // A7
+  ];
+  const MOTIFS = [ // [拍偏移, 频率]，D 小调悬疑小动机（0.66 = 摇摆后半拍）
+    [[0, 587.33], [0.66, 698.46], [1, 659.26], [2.66, 587.33]],
+    [[0, 880.00], [0.66, 783.99], [1.66, 698.46], [2.66, 659.26], [3.33, 587.33]],
+    [[0, 587.33], [0.66, 554.37], [1, 587.33], [2, 698.46], [2.66, 659.26]],
+    [[0, 698.46], [1, 659.26], [1.66, 698.46], [2, 880.00], [3, 783.99]],
+  ];
+
+  function ensureCtx() {
+    if (ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    ctx = new AC();
+    master = ctx.createGain();
+    master.gain.value = 0;
+    master.connect(ctx.destination);
+    sfxBus = ctx.createGain(); // 音效独立通道：关音乐不影响音效
+    sfxBus.gain.value = 1;
+    sfxBus.connect(ctx.destination);
+    const len = Math.floor(ctx.sampleRate * 2);
+    noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  }
+  function bassPluck(freq, t) { // 拨弦低音：短促有弹性
+    const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = freq;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.09, t);
+    g.gain.exponentialRampToValueAtTime(0.0006, t + 0.35);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.4);
+  }
+  function stab(notes, t) { // 反拍和弦轻点
+    for (const freq of notes) {
+      const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = freq;
+      const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1300;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.016, t);
+      g.gain.exponentialRampToValueAtTime(0.0004, t + 0.22);
+      o.connect(f); f.connect(g); g.connect(master);
+      o.start(t); o.stop(t + 0.26);
+    }
+  }
+  function pluck(freq, t) { // 旋律拨片（略暗的音色，配合悬疑氛围）
+    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = freq;
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1800;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.042, t);
+    g.gain.exponentialRampToValueAtTime(0.0004, t + 1.2);
+    o.connect(f); f.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 1.3);
+  }
+  function tone(freq, t, dur, vol, type, lp) { // 乐句音符（走音效通道，供结案/悬案短曲使用）
+    const o = ctx.createOscillator(); o.type = type; o.frequency.value = freq;
+    const fl = ctx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = lp;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0005, t + dur);
+    o.connect(fl); fl.connect(g); g.connect(sfxBus);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+  function duckMusic(t, dur) { // 短曲期间压低背景音乐
+    if (!playing) return;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(0.10, t + 0.15);
+    master.gain.setValueAtTime(0.10, t + dur - 0.6);
+    master.gain.linearRampToValueAtTime(1, t + dur);
+  }
+  function pop(t, vol) { // 老唱片的轻微噼啪
+    const src = ctx.createBufferSource(); src.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 3500; f.Q.value = 1.2;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start(t, Math.random() * 1.5, 0.06);
+  }
+  // ---- 音效合成（走 sfxBus 独立通道） ----
+  function blipTo(f0, f1, t, dur, vol) {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0005, t + dur);
+    o.connect(g); g.connect(sfxBus);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  function burst(t, dur, freq, vol, type, q) {
+    const src = ctx.createBufferSource(); src.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0003, t + dur);
+    src.connect(f); f.connect(g); g.connect(sfxBus);
+    src.start(t, Math.random() * 1.2, dur + 0.05);
+  }
+  function scratch(t, down) { // 铅笔划线：滤波噪声扫频
+    const dur = 0.13;
+    const src = ctx.createBufferSource(); src.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 2.5;
+    f.frequency.setValueAtTime(down ? 1600 : 800, t);
+    f.frequency.exponentialRampToValueAtTime(down ? 700 : 1500, t + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, t);
+    g.gain.exponentialRampToValueAtTime(0.055, t + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.0005, t + dur);
+    src.connect(f); f.connect(g); g.connect(sfxBus);
+    src.start(t, Math.random() * 1.2, dur + 0.05);
+  }
+  function pageTurn(t, vol) { // 翻页：摩擦滑动"沙"（带通上扫、中段鼓起）+ 纸页落定"啪"
+    const src = ctx.createBufferSource(); src.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.8;
+    f.frequency.setValueAtTime(700, t);
+    f.frequency.exponentialRampToValueAtTime(3800, t + 0.26);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0015, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.17);
+    g.gain.exponentialRampToValueAtTime(0.0015, t + 0.30);
+    src.connect(f); f.connect(g); g.connect(sfxBus);
+    src.start(t, Math.random() * 1.2, 0.36);
+    const src2 = ctx.createBufferSource(); src2.buffer = noiseBuf; // 落定的"啪"
+    const f2 = ctx.createBiquadFilter(); f2.type = 'highpass'; f2.frequency.value = 1200;
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(vol * 0.9, t + 0.27);
+    g2.gain.exponentialRampToValueAtTime(0.0005, t + 0.34);
+    src2.connect(f2); f2.connect(g2); g2.connect(sfxBus);
+    src2.start(t + 0.27, Math.random() * 1.2, 0.1);
+  }
+  function thump(t, strong) { // 盖章闷响：低频下坠 + 低通噪声体
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(150, t);
+    o.frequency.exponentialRampToValueAtTime(55, t + 0.18);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(strong ? 0.32 : 0.18, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+    o.connect(g); g.connect(sfxBus);
+    o.start(t); o.stop(t + 0.25);
+    burst(t, 0.05, 350, strong ? 0.11 : 0.06, 'lowpass', 0.7);
+  }
+  function sfxPlay(name, arg) {
+    ensureCtx();
+    const go = () => {
+      const t = ctx.currentTime + 0.01;
+      if (name === 'tap') {
+        if (arg === 2) blipTo(523, 740, t, 0.07, 0.05);            // ✓ 清亮上挑
+        else if (arg === 1) { blipTo(230, 175, t, 0.05, 0.045); burst(t, 0.03, 2500, 0.025, 'bandpass', 1); } // ✕ 铅笔轻点
+        else burst(t, 0.04, 1800, 0.02, 'bandpass', 0.8);          // 清除：轻擦
+      } else if (name === 'strike') {
+        scratch(t, !!arg);
+      } else if (name === 'paper') { // 翻开案卷：连翻两页，第二页轻一些
+        pageTurn(t, 0.11);
+        pageTurn(t + 0.34, 0.07);
+      } else if (name === 'select') { // 难度选择确认音：轻快上挑
+        blipTo(440, 587.33, t, 0.06, 0.055);
+      } else if (name === 'stamp') {
+        thump(t, arg !== false);
+      } else if (name === 'win') { // 结案凯旋短曲：上行琶音 + 明亮收束（原创）
+        duckMusic(t, 2.4);
+        const seq = [523.25, 659.26, 783.99, 1046.50]; // C5 E5 G5 C6
+        seq.forEach((f, i) => tone(f, t + i * 0.11, 0.3, 0.16, 'triangle', 2600));
+        [261.63, 329.63, 392.00, 523.25].forEach(f => tone(f, t + 0.48, 1.5, 0.095, 'triangle', 1800));
+        tone(130.81, t + 0.48, 1.5, 0.17, 'sine', 800);   // C3 低音托底
+        tone(1567.98, t + 0.62, 0.5, 0.05, 'sine', 4200); // 高音闪光
+      } else if (name === 'fail') { // 悬案叹息乐句：下行小调 + 暗淡收尾（原创）
+        duckMusic(t, 2.6);
+        const seq = [329.63, 293.66, 261.63, 246.94]; // E4 D4 C4 B3
+        seq.forEach((f, i) => tone(f, t + i * 0.22, 0.42, 0.14, 'triangle', 1400));
+        [220.00, 261.63, 329.63].forEach(f => tone(f, t + 0.95, 1.6, 0.085, 'triangle', 1000));
+        tone(110.00, t + 0.95, 1.6, 0.14, 'sine', 600); // A2 低音
+      }
+    };
+    if (ctx.state === 'running') go();
+    else { try { ctx.resume().then(go).catch(() => {}); } catch (e) {} }
+  }
+  function scheduleChord() {
+    if (!playing) return;
+    const t0 = ctx.currentTime + 0.06;
+    const ch = CHORDS[step % CHORDS.length];
+    step++;
+    // 潜行低音走线：每拍一音（含半音下探），走线循环两遍
+    for (let b = 0; b < 8; b++) bassPluck(ch.walk[b % 4], t0 + b * SPB);
+    // 反拍小调和弦轻点：第 2、4、6、8 拍
+    for (const b of [1, 3, 5, 7]) stab(ch.stab, t0 + b * SPB);
+    // 每段奏一个悬疑小动机，落在第 1 或第 2 小节
+    const motif = MOTIFS[Math.floor(Math.random() * MOTIFS.length)];
+    const base = Math.random() < 0.5 ? 0 : 4;
+    for (const [beat, f] of motif) pluck(f, t0 + (base + beat) * SPB);
+    chordTimer = setTimeout(scheduleChord, SEG * 1000);
+  }
+  function schedulePop() {
+    if (!playing) return;
+    pop(ctx.currentTime + 0.02, 0.008 + Math.random() * 0.014);
+    popTimer = setTimeout(schedulePop, 250 + Math.random() * 1200);
+  }
+  function start() {
+    ensureCtx();
+    if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+    if (playing) return;
+    playing = true; step = 0;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
+    master.gain.linearRampToValueAtTime(1, ctx.currentTime + 2);
+    scheduleChord();
+    schedulePop();
+  }
+  function stop() {
+    if (!playing) return;
+    playing = false;
+    clearTimeout(chordTimer); clearTimeout(popTimer);
+    if (ctx) {
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
+      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
+    }
+  }
+  return { start, stop, sfx: sfxPlay, isPlaying: () => playing, ctxState: () => (ctx ? ctx.state : 'none') };
+})();
+
+// 声音开关（三档循环：🔈 仅音效 → 🎵 音乐+音效 → 🔇 全静音），固定悬浮按钮
+const AUDIO_MODES = ['sfx', 'all', 'mute'];
+let audioMode = pref.audio || (pref.music ? 'all' : 'sfx');
+if (!AUDIO_MODES.includes(audioMode)) audioMode = 'sfx';
+const musicBtn = document.createElement('button');
+musicBtn.className = 'music-btn';
+musicBtn.setAttribute('aria-label', '声音开关：音效／音乐／静音');
+document.body.appendChild(musicBtn);
+function playSfx(name, arg) {
+  if (audioMode === 'mute') return;
+  BGM.sfx(name, arg);
+}
+function setMusicUI() {
+  musicBtn.textContent = audioMode === 'all' ? '🎵' : audioMode === 'sfx' ? '🔈' : '🔇';
+  musicBtn.classList.toggle('off', audioMode === 'mute');
+}
+setMusicUI();
+musicBtn.addEventListener('click', () => {
+  audioMode = AUDIO_MODES[(AUDIO_MODES.indexOf(audioMode) + 1) % AUDIO_MODES.length];
+  pref.audio = audioMode;
+  save(LS_PREF, pref);
+  if (audioMode === 'all') BGM.start(); else BGM.stop();
+  setMusicUI();
+  playSfx('tap', 2); // 切换反馈音
+});
+// 上次开着音乐：等首次触屏再启动（移动端禁止自动播放）
+if (audioMode === 'all') {
+  document.addEventListener('pointerdown', () => {
+    if (audioMode === 'all' && !BGM.isPlaying()) BGM.start();
+  }, { once: true });
+}
+// 切后台停，回前台续（仅音乐）
+let bgmWasPlaying = false;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    bgmWasPlaying = BGM.isPlaying();
+    if (bgmWasPlaying) BGM.stop();
+  } else if (bgmWasPlaying && audioMode === 'all') {
+    BGM.start();
+    bgmWasPlaying = false;
+  }
+});
+
+// ---------- 启动 ----------
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { if (G && document.getElementById('lgrid')) renderGrid(); }, 150);
+});
+if (G) renderCase(); else renderHome();
+</script>
