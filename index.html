@@ -1885,7 +1885,6 @@ function renderHome() {
         <button class="linkish" id="langBtn">${tt('English', '中文')}</button>
       </div>
     </div>
-    <p class="tip">${tt('💡 在 iPhone 上：Safari 打开本页 → 分享 → 「添加到主屏幕」，即可像 App 一样全屏游玩。<br>⚠️ 部分设备的托管环境不会长期保留进度——收工前用「存档备份」导出存档码存进备忘录，随时可恢复。', '💡 On iPhone: open this page in Safari → Share → "Add to Home Screen" for a full-screen app experience.<br>⚠️ Some hosting environments do not keep browser saves — export a save code via "Save Backup" before you leave, and paste it back anytime.')}</p>
   `;
   app.querySelectorAll('.diff').forEach(el => el.addEventListener('click', () => {
     pref.diff = el.dataset.diff;
